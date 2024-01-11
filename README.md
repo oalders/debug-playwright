@@ -1,5 +1,12 @@
 # Getting Started
 
+## Installation
+
+```bash
+npm install
+npx playwright install
+```
+
 ## Run Tests in Headed Mode
 
 ```bash
