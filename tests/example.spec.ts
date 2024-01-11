@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { dumpFormattedContent } from '../debug.ts';
+import { dumpFormattedContent } from '../lib/debug';
 
 test('2xx', async ({ page }) => {
     dumpFormattedContent(page);
@@ -23,7 +23,7 @@ test('2xx JSON', async ({ page }) => {
     await expect(page).not.toHaveTitle('title');
 });
 
-test.only('2xx png', async ({ page }) => {
+test('2xx png', async ({ page }) => {
     dumpFormattedContent(page);
     await page.goto('https://vilerichard.com/static/photos/group1.jpg');
 
