@@ -5,8 +5,6 @@ test('2xx', async ({ page }) => {
     dumpFormattedContent(page);
     await page.goto('https://example.com');
 
-    const buffer = await page.screenshot();
-    console.log(buffer.toString('base64'));
     // Expect a title "to contain" a substring.
     await expect(page).toHaveTitle(/Example Domain/);
 });
@@ -33,7 +31,7 @@ test('2xx png', async ({ page }) => {
     await expect(page).not.toHaveTitle('title');
 });
 
-test.only('2xx screenshot', async ({ page }) => {
+test('2xx screenshot', async ({ page }) => {
     await page.goto('https://example.com');
     await printScreenshot(page);
     await expect(page).toHaveTitle(/Example Domain/);
