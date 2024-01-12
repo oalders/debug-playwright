@@ -27,7 +27,7 @@ test('2xx png', async ({ page }) => {
     dumpFormattedContent(page);
     await page.goto('https://vilerichard.com/static/photos/group1.jpg');
 
-    // Expect a title "to contain" a substring.
+    // Expect a title not "to contain" a substring.
     await expect(page).not.toHaveTitle('title');
 });
 
