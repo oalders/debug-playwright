@@ -1,10 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { dumpFormattedContent } from '../lib/debug';
+import { dumpFormattedContent, printScreenshot } from '../lib/debug';
 
 test('2xx', async ({ page }) => {
     dumpFormattedContent(page);
     await page.goto('https://example.com');
 
+    const buffer = await page.screenshot();
+    console.log(buffer.toString('base64'));
     // Expect a title "to contain" a substring.
     await expect(page).toHaveTitle(/Example Domain/);
 });
@@ -29,4 +31,10 @@ test('2xx png', async ({ page }) => {
 
     // Expect a title "to contain" a substring.
     await expect(page).not.toHaveTitle('title');
+});
+
+test.only('2xx screenshot', async ({ page }) => {
+    await page.goto('https://example.com');
+    await printScreenshot(page);
+    await expect(page).toHaveTitle(/Example Domain/);
 });

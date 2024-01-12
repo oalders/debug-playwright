@@ -42,3 +42,10 @@ export const dumpFormattedContent = (page: Page) => {
         });
     });
 };
+
+export const printScreenshot = async (page: Page) => {
+    const tempFile = join(tmpdir(), 'temp.png');
+    await page.screenshot({ path: tempFile, fullPage: true });
+    const output = execSync('wezterm imgcat ' + tempFile);
+    console.log(output.toString());
+};
