@@ -17,6 +17,7 @@ test('4xx', async ({ page }) => {
 });
 
 test('2xx JSON', async ({ page }) => {
+    test.skip(process.env.CI === "true", 'do not test wezterm under CI');
     dumpFormattedContent(page);
     await page.goto('https://filesamples.com/samples/code/json/sample1.json');
 
@@ -24,28 +25,22 @@ test('2xx JSON', async ({ page }) => {
 });
 
 test('2xx png', async ({ page }) => {
+    test.skip(process.env.CI === "true", 'do not test wezterm under CI');
     dumpFormattedContent(page);
     await page.goto('https://vilerichard.com/static/photos/group1.jpg');
 
-    // Expect a title not "to contain" a substring.
-    await expect(page).not.toHaveTitle('title');
-});
-
-test('2xx ASCII png', async ({ page }) => {
-    dumpFormattedContent(page, Using.ascii);
-    await page.goto('https://vilerichard.com/static/photos/group1.jpg');
-
-    // Expect a title not "to contain" a substring.
     await expect(page).not.toHaveTitle('title');
 });
 
 test('2xx screenshot default', async ({ page }) => {
+    test.skip(process.env.CI === "true", 'do not test wezterm under CI');
     await page.goto('https://example.com');
     await printScreenshot(page);
     await expect(page).toHaveTitle(/Example Domain/);
 });
 
 test('2xx screenshot wezterm imgcat', async ({ page }) => {
+    test.skip(process.env.CI === "true", 'do not test wezterm under CI');
     await page.goto('https://example.com');
     await printScreenshot(page);
     await expect(page).toHaveTitle(/Example Domain/);
@@ -55,4 +50,12 @@ test('2xx ASCII screenshot', async ({ page }) => {
     await page.goto('https://example.com');
     await printScreenshot(page, Using.ascii)
     await expect(page).toHaveTitle(/Example Domain/);
+});
+
+test('2xx ASCII png', async ({ page }) => {
+    dumpFormattedContent(page, Using.ascii);
+    await page.goto('https://vilerichard.com/static/photos/group1.jpg');
+
+    // Expect a title not "to contain" a substring.
+    await expect(page).not.toHaveTitle('title');
 });
