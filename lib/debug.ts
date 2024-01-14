@@ -5,7 +5,13 @@ import { tmpdir } from 'node:os';
 import { writeFileSync } from 'node:fs';
 import type { Page } from '@playwright/test';
 
-export const dumpFormattedContent = (page: Page) => {
+export enum Using {
+    'ascii' = 'ascii',
+    'imgcat' = 'imgcat',
+    'wezterm' = 'wezterm imgcat',
+}
+
+export const dumpFormattedContent = (page: Page, using?: Using) => {
     page.on('response', async (response) => {
         if (response.request().resourceType() !== 'document') {
             return;
@@ -23,9 +29,7 @@ export const dumpFormattedContent = (page: Page) => {
             const buffer = await response.body();
             const tempFile = join(tmpdir(), 'temp.png');
             writeFileSync(tempFile, buffer);
-
-            await printImage(tempFile);
-
+            await printFile(tempFile, using);
             return;
         }
 
@@ -42,13 +46,39 @@ export const dumpFormattedContent = (page: Page) => {
     });
 };
 
-export const printScreenshot = async (page: Page) => {
-    const tempFile = join(tmpdir(), 'temp.png');
-    await page.screenshot({ path: tempFile, fullPage: true });
-    await printImage(tempFile);
+const printFile = async (file: string, using: Using | undefined) => {
+    if (using === 'ascii') {
+        await printASCII(file);
+    }
+    else {
+        // if using is not defined default to 'wezterm imgcat'
+        if (!using) {
+            using = Using.wezterm;
+        }
+        await printImage(file, using);
+    }
 };
 
-const printImage = async (file: string) => {
-    const output = execSync('wezterm imgcat ' + file);
+export const printScreenshot = async (page: Page, using?: Using | undefined) => {
+    const tempFile = join(tmpdir(), 'temp.png');
+    await page.screenshot({ path: tempFile, fullPage: true });
+    await printFile(tempFile, using);
+};
+
+const printImage = async (file: string, using?: Using | undefined) => {
+    const output = execSync(`${using}  ${file}`);
     console.log(output.toString());
+};
+
+const printASCII = async (file: string) => {
+    var asciify = require('asciify-image');
+    var options = {
+        fit: 'box',
+        width: 40,
+    }
+
+    asciify(file, options, function(err, asciified) {
+        if (err) throw err;
+        console.log(asciified);
+    });
 };
