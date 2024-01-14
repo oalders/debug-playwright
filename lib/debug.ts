@@ -46,9 +46,23 @@ export const printScreenshot = async (page: Page) => {
     const tempFile = join(tmpdir(), 'temp.png');
     await page.screenshot({ path: tempFile, fullPage: true });
     await printImage(tempFile);
+    printASCII(Buffer.from(tempFile));
+    console.log('xxxx');
 };
 
 const printImage = async (file: string) => {
     const output = execSync('wezterm imgcat ' + file);
     console.log(output.toString());
 };
+
+const handleConvertedFile = (err: any, converted: any) => {
+    console.log('--------');
+    console.log(err || converted);
+};
+
+const printASCII = (file: Buffer) => {
+    const imageToAscii = require("image-to-ascii");
+    console.log('ZZZZZ');
+
+    imageToAscii(file, { image_type: 'png' }, handleConvertedFile);
+}

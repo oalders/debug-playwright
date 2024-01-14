@@ -31,7 +31,7 @@ test('2xx png', async ({ page }) => {
     await expect(page).not.toHaveTitle('title');
 });
 
-test('2xx screenshot', async ({ page }) => {
+test.only('2xx screenshot', async ({ page }) => {
     await page.goto('https://example.com');
     await printScreenshot(page);
     await expect(page).toHaveTitle(/Example Domain/);
