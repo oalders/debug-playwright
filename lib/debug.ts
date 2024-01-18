@@ -24,8 +24,15 @@ export const logResponse = (page: Page) => {
       return;
     }
 
-    console.log(`${response.url()} ${await contentType(response)}`)
-    console.log(`${response.status()} ${await responseStatus(response)} ${response.url()}`);
+    // console.log a list joined by spaces
+    console.log(
+      [
+        response.status(),
+        await responseStatus(response),
+        await contentType(response),
+        response.url(),
+      ].join(' ')
+    );
   });
 };
 
