@@ -1,8 +1,6 @@
 import { execSync } from 'node:child_process';
-import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { temporaryFile } from 'tempy';
-import { tmpdir } from 'node:os';
 import { writeFileSync } from 'node:fs';
 import type { Page, Response } from '@playwright/test';
 
