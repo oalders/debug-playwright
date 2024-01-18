@@ -18,7 +18,7 @@ const contentType = async (response: Response) => {
   return response.headerValue('content-type');
 };
 
-export const logResponse = async (page: Page) => {
+export const logResponse = (page: Page) => {
   page.on('response', async (response) => {
     if (response.request().resourceType() !== 'document') {
       return;
@@ -58,16 +58,16 @@ export const dumpFormattedContent = (page: Page, using?: Using) => {
   });
 };
 
-const printFile = async (file: string, using: Using | undefined) => {
+const printFile = (file: string, using: Using | undefined) => {
   if (using === 'ascii') {
-    await printASCII(file);
+    printASCII(file);
   }
   else {
     // if using is not defined default to 'wezterm imgcat'
     if (!using) {
       using = Using.wezterm;
     }
-    await printImage(file, using);
+    printImage(file, using);
   }
 };
 
@@ -81,12 +81,12 @@ export const printScreenshot = async (page: Page, using?: Using | undefined, arg
   await printFile(tempFile, using);
 };
 
-const printImage = async (file: string, using?: Using | undefined) => {
+const printImage = (file: string, using?: Using | undefined) => {
   const output = execSync(`${using}  ${file}`);
   console.log(output.toString());
 };
 
-const printASCII = async (file: string) => {
+const printASCII = (file: string) => {
   console.log(`cannot currently print ${file} as ASCII`);
   // var asciify = require('asciify-image');
   // var options = {
