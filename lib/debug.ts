@@ -1,84 +1,103 @@
 import { execSync } from 'node:child_process';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
+import { temporaryFile } from 'tempy';
 import { tmpdir } from 'node:os';
 import { writeFileSync } from 'node:fs';
-import type { Page } from '@playwright/test';
+import type { Page, Response } from '@playwright/test';
 
 export enum Using {
-    'ascii' = 'ascii',
-    'imgcat' = 'imgcat',
-    'wezterm' = 'wezterm imgcat',
+  'ascii' = 'ascii',
+  'imgcat' = 'imgcat',
+  'wezterm' = 'wezterm imgcat',
 }
 
+const responseStatus = async (response: Response) => {
+  return (response.status() < 200 || response.status() > 299) ? '💩' : '💖';
+};
+
+const contentType = async (response: Response) => {
+  return response.headerValue('content-type');
+};
+
+export const logResponse = async (page: Page) => {
+  page.on('response', async (response) => {
+    if (response.request().resourceType() !== 'document') {
+      return;
+    }
+
+    console.log(`${response.url()} ${contentType(response)}`)
+    console.log(`${responseStatus(response)} ${response.status()} ${response.url()}`);
+  });
+};
+
+
 export const dumpFormattedContent = (page: Page, using?: Using) => {
-    page.on('response', async (response) => {
-        if (response.request().resourceType() !== 'document') {
-            return;
-        }
+  page.on('response', async (response) => {
+    if (await responseStatus(response) === '💩') {
+      return;
+    }
 
-        const status = (response.status() < 200 || response.status() > 299) ? '💩' : '💖';
-        console.log(`${status} ${response.status()} ${response.url()}`);
+    if ((await contentType(response)).startsWith('image')) {
+      console.log(`🖼  ${response.url()} ${contentType(response)}`)
+      const buffer = await response.body();
+      const tempFile = temporaryFile({ extension: 'png' });
+      writeFileSync(tempFile, buffer);
+      await printFile(tempFile, using);
+      return;
+    }
 
-        if (status === '💩') {
-            return;
-        }
+    const text = await response.text();
 
-        if (response.headers()['content-type'].startsWith('image')) {
-            console.log(`🖼  ${response.url()} ${response.headers()['content-type']}`)
-            const buffer = await response.body();
-            const tempFile = join(tmpdir(), 'temp.png');
-            writeFileSync(tempFile, buffer);
-            await printFile(tempFile, using);
-            return;
-        }
+    const child = spawn('lynx', ['-stdin', '-dump']);
+    child.stdin.write(text);
+    child.stdin.end();
 
-        const text = await response.text();
-
-        const child = spawn('lynx', ['-stdin', '-dump']);
-        child.stdin.write(text);
-        child.stdin.end();
-
-        child.stdout.setEncoding('utf8');
-        child.stdout.on('data', function(data) {
-            console.log(data);
-        });
+    child.stdout.setEncoding('utf8');
+    child.stdout.on('data', function(data) {
+      console.log(data);
     });
+  });
 };
 
 const printFile = async (file: string, using: Using | undefined) => {
-    if (using === 'ascii') {
-        await printASCII(file);
+  if (using === 'ascii') {
+    await printASCII(file);
+  }
+  else {
+    // if using is not defined default to 'wezterm imgcat'
+    if (!using) {
+      using = Using.wezterm;
     }
-    else {
-        // if using is not defined default to 'wezterm imgcat'
-        if (!using) {
-            using = Using.wezterm;
-        }
-        await printImage(file, using);
-    }
+    await printImage(file, using);
+  }
 };
 
-export const printScreenshot = async (page: Page, using?: Using | undefined) => {
-    const tempFile = join(tmpdir(), 'temp.png');
-    await page.screenshot({ path: tempFile, fullPage: true });
-    await printFile(tempFile, using);
+export const printScreenshot = async (page: Page, using?: Using | undefined, args?: Object) => {
+  const tempFile = temporaryFile({ extension: 'png' });
+  if (args === undefined) {
+    args = [{ fullPage: false }];
+  }
+
+  await page.screenshot({ path: tempFile, ...args });
+  await printFile(tempFile, using);
 };
 
 const printImage = async (file: string, using?: Using | undefined) => {
-    const output = execSync(`${using}  ${file}`);
-    console.log(output.toString());
+  const output = execSync(`${using}  ${file}`);
+  console.log(output.toString());
 };
 
 const printASCII = async (file: string) => {
-    var asciify = require('asciify-image');
-    var options = {
-        fit: 'box',
-        width: 40,
-    }
-
-    asciify(file, options, function(err, asciified) {
-        if (err) throw err;
-        console.log(asciified);
-    });
+  console.log(`cannot currently print ${file} as ASCII`);
+  // var asciify = require('asciify-image');
+  // var options = {
+  // fit: 'box',
+  // width: 40,
+  // }
+  //
+  // asciify(file, options, function(err, asciified) {
+  // if (err) throw err;
+  // console.log(asciified);
+  // });
 };
