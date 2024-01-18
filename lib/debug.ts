@@ -24,8 +24,8 @@ export const logResponse = async (page: Page) => {
       return;
     }
 
-    console.log(`${response.url()} ${contentType(response)}`)
-    console.log(`${responseStatus(response)} ${response.status()} ${response.url()}`);
+    console.log(`${response.url()} ${await contentType(response)}`)
+    console.log(`${response.status()} ${await responseStatus(response)} ${response.url()}`);
   });
 };
 
