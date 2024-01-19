@@ -16,7 +16,7 @@ npx playwright test --project chromium --workers=1
 ## Run Tests in Headed Mode
 
 ```bash
-npx playwright test --headed --project chromium
+npx playwright test --project chromium --workers=1 --headed
 ```
 
 ## Expected Output
