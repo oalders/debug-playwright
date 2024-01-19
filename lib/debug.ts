@@ -18,13 +18,12 @@ const contentType = async (response: Response) => {
   return response.headerValue('content-type');
 };
 
-export const logResponse = (page: Page) => {
+export const logResponse = (page: Page, screenshot?: Boolean) => {
   page.on('response', async (response) => {
     if (response.request().resourceType() !== 'document') {
       return;
     }
 
-    // console.log a list joined by spaces
     console.log(
       [
         response.status(),
@@ -33,9 +32,11 @@ export const logResponse = (page: Page) => {
         response.url(),
       ].join(' ')
     );
+    if (screenshot) {
+      await printScreenshot(page);
+    }
   });
 };
-
 
 export const dumpFormattedContent = (page: Page, using?: Using) => {
   page.on('response', async (response) => {
