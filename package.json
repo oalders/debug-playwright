@@ -16,7 +16,6 @@
     "@types/node": "^20.11.5"
   },
   "dependencies": {
-    "asciify-image": "^0.1.10",
     "tempy": "^3.1.0"
   }
 }

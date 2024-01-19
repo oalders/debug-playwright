@@ -5,7 +5,6 @@ import { writeFileSync } from 'node:fs';
 import type { Page, Response } from '@playwright/test';
 
 export enum Using {
-  'ascii' = 'ascii',
   'imgcat' = 'imgcat',
   'wezterm' = 'wezterm imgcat',
 }
@@ -49,7 +48,7 @@ export const dumpFormattedContent = (page: Page, using?: Using) => {
       const buffer = await response.body();
       const tempFile = temporaryFile({ extension: 'png' });
       writeFileSync(tempFile, buffer);
-      await printFile(tempFile, using);
+      printFile(tempFile, using);
       return;
     }
 
@@ -67,16 +66,11 @@ export const dumpFormattedContent = (page: Page, using?: Using) => {
 };
 
 const printFile = (file: string, using: Using | undefined) => {
-  if (using === 'ascii') {
-    printASCII(file);
+  // if using is not defined default to 'wezterm imgcat'
+  if (!using) {
+    using = Using.wezterm;
   }
-  else {
-    // if using is not defined default to 'wezterm imgcat'
-    if (!using) {
-      using = Using.wezterm;
-    }
-    printImage(file, using);
-  }
+  printImage(file, using);
 };
 
 export const printScreenshot = async (page: Page, using?: Using | undefined, args?: Object) => {
@@ -86,24 +80,10 @@ export const printScreenshot = async (page: Page, using?: Using | undefined, arg
   }
 
   await page.screenshot({ path: tempFile, ...args });
-  await printFile(tempFile, using);
+  printFile(tempFile, using);
 };
 
 const printImage = (file: string, using?: Using | undefined) => {
   const output = execSync(`${using}  ${file}`);
   console.log(output.toString());
-};
-
-const printASCII = (file: string) => {
-  console.log(`cannot currently print ${file} as ASCII`);
-  // var asciify = require('asciify-image');
-  // var options = {
-  // fit: 'box',
-  // width: 40,
-  // }
-  //
-  // asciify(file, options, function(err, asciified) {
-  // if (err) throw err;
-  // console.log(asciified);
-  // });
 };
