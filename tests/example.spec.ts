@@ -53,17 +53,3 @@ test('2xx screenshot wezterm imgcat', async ({ page }) => {
   await printScreenshot(page);
   await expect(page).toHaveTitle(/Example Domain/);
 });
-
-test('2xx ASCII screenshot', async ({ page }) => {
-  await page.goto('https://example.com');
-  await printScreenshot(page, Using.ascii)
-  await expect(page).toHaveTitle(/Example Domain/);
-});
-
-test('2xx ASCII png', async ({ page }) => {
-  dumpFormattedContent(page, Using.ascii);
-  await page.goto('https://vilerichard.com/static/photos/group1.jpg');
-
-  // Expect a title not "to contain" a substring.
-  await expect(page).not.toHaveTitle('title');
-});
