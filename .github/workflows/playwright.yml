@@ -19,6 +19,12 @@ jobs:
         node-version: 18
     - name: Install lynx
       run: sudo apt-get install lynx
+    - uses: actions/setup-go@v4
+      with:
+        go-version: '>=1.21.0'
+    - run: go version
+    - name: Install image2ascii
+      run: go install github.com/qeesung/image2ascii@latest
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
