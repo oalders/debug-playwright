@@ -4,51 +4,94 @@ import { temporaryFile } from 'tempy';
 import { writeFileSync } from 'node:fs';
 import type { Page, Response } from '@playwright/test';
 
-export enum Using {
-  'imgcat' = 'imgcat',
-  'wezterm' = 'wezterm imgcat',
-}
-
-const responseStatus = async (response: Response) => {
-  return (response.status() < 200 || response.status() > 299) ? '💩' : '💖';
+const responseStatus = (response: Response) => {
+  const code = response.status();
+  return code < 300 ? '💖' : code < 400 ? '🚀' : '💩';
 };
 
 const contentType = async (response: Response) => {
   return response.headerValue('content-type');
 };
 
-export const logResponse = (page: Page, screenshot?: Boolean) => {
-  page.on('response', async (response) => {
-    if (response.request().resourceType() !== 'document') {
-      return;
-    }
+export class DebugPlaywright {
+  public command: string;
+  public formatContent: boolean;
+  public fullPage: boolean;
+  public listen: boolean;
+  public methodPadLength: number;
+  public screenshots: boolean;
+  private page: Page;
 
-    console.log(
-      [
-        response.status(),
-        await responseStatus(response),
-        await contentType(response),
-        response.url(),
-      ].join(' ')
-    );
-    if (screenshot) {
-      await printScreenshot(page);
-    }
-  });
-};
+  constructor(
+    page: Page,
+    screenshots: boolean = true,
+    fullPage: boolean = false,
+    listen: boolean = true,
+    command: string = 'wezterm imgcat',
+  ) {
+    this.page = page;
+    this.screenshots = screenshots;
+    this.command = command;
+    this.fullPage = fullPage;
+    this.listen = listen;
+    this.methodPadLength = 4;
+    this.addListener();
+  }
 
-export const dumpFormattedContent = (page: Page, using?: Using) => {
-  page.on('response', async (response) => {
-    if (await responseStatus(response) === '💩') {
+  printFile = (file: string) => {
+    this.printImage(file);
+  };
+
+  printScreenshot = async () => {
+    const tempFile = temporaryFile({ extension: 'png' });
+
+    await this.page.screenshot({ path: tempFile, fullPage: this.fullPage });
+    this.printFile(tempFile);
+  };
+
+  printImage = (file: string) => {
+    const output = execSync(`${this.command} ${file}`);
+    console.log(output.toString());
+  };
+
+  addListener = () => {
+    this.page.on('response', async (response: Response) => {
+      if (!this.listen) {
+        return;
+      }
+      if (response.request().resourceType() !== 'document') {
+        return;
+      }
+
+      console.log(
+        [
+          response.status(),
+          responseStatus(response),
+          response.request().method().padEnd(this.methodPadLength, ' '),
+          response.url(),
+          await contentType(response),
+        ].join(' ')
+      );
+      if (this.formatContent) {
+        await this.dumpformattedContent(response);
+      }
+      if (this.screenshots) {
+        await this.printScreenshot();
+      }
+    });
+  };
+
+  dumpformattedContent = async (response: Response) => {
+    if (responseStatus(response) === '💩') {
       return;
     }
 
     if ((await contentType(response)).startsWith('image')) {
-      console.log(`🖼  ${response.url()} ${contentType(response)}`)
+      const ext = (await contentType(response)).split('/')[1];
+      const tempFile = temporaryFile({ extension: ext });
       const buffer = await response.body();
-      const tempFile = temporaryFile({ extension: 'png' });
       writeFileSync(tempFile, buffer);
-      printFile(tempFile, using);
+      this.printFile(tempFile);
       return;
     }
 
@@ -62,28 +105,5 @@ export const dumpFormattedContent = (page: Page, using?: Using) => {
     child.stdout.on('data', function(data) {
       console.log(data);
     });
-  });
-};
-
-const printFile = (file: string, using: Using | undefined) => {
-  // if using is not defined default to 'wezterm imgcat'
-  if (!using) {
-    using = Using.wezterm;
-  }
-  printImage(file, using);
-};
-
-export const printScreenshot = async (page: Page, using?: Using | undefined, args?: Object) => {
-  const tempFile = temporaryFile({ extension: 'png' });
-  if (args === undefined) {
-    args = [{ fullPage: false }];
-  }
-
-  await page.screenshot({ path: tempFile, ...args });
-  printFile(tempFile, using);
-};
-
-const printImage = (file: string, using?: Using | undefined) => {
-  const output = execSync(`${using}  ${file}`);
-  console.log(output.toString());
-};
+  };
+}

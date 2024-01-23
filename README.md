@@ -47,3 +47,32 @@ To open last HTML report run:
 
   npx playwright show-report
 ```
+
+## Usage
+
+### Default
+
+Run debugging with the defaults. Requires you to be running inside `wezterm`
+but **not** inside `tmux`.
+
+```typescript
+const dp = new DebugPlaywright(page);
+```
+
+### Configure
+
+```typescript
+const dp = new DebugPlaywright(page);
+
+// take full page screenshots
+dp.fullPage = true;
+
+// or, turn off automatic screenshots
+dp.screenshots = false;
+
+// dump lynx output
+dp.formatContent = true;
+
+// print a screenshot on demand
+await dp.printScreenshot();
+```
