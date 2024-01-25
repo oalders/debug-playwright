@@ -16,6 +16,7 @@
     "@types/node": "^20.11.5"
   },
   "dependencies": {
-    "tempy": "^3.1.0"
+    "tempy": "^3.1.0",
+    "terminal-image": "^2.0.0"
   }
 }
