@@ -24,7 +24,7 @@ npx playwright test --project chromium --workers=1 --headed
 ## Expected Output
 
 ```text
-$ npx playwright test --project chromium
+$ npx playwright test --project chromium --workers=1
 
 Running 1 test using 1 worker
 [chromium] › example.spec.ts:4:5 › has title

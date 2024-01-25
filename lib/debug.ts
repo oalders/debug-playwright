@@ -3,6 +3,7 @@ import { spawn } from 'node:child_process';
 import { temporaryFile } from 'tempy';
 import { writeFileSync } from 'node:fs';
 import type { Page, Response } from '@playwright/test';
+import terminalImage from 'terminal-image';
 
 const responseStatus = (response: Response) => {
   const code = response.status();
@@ -20,7 +21,7 @@ export class DebugPlaywright {
   public listen: boolean;
   public methodPadLength: number;
   public screenshots: boolean;
-  private page: Page;
+  public page: Page;
 
   constructor(
     page: Page,
@@ -38,35 +39,66 @@ export class DebugPlaywright {
     this.addListener();
   }
 
-  printFile = (file: string) => {
-    this.printImage(file);
+  printFile = async (file: string) => {
+    await this.printImage(file);
   };
 
-  printScreenshot = async () => {
+  printScreenshot = async (page?: Page) => {
+    const p = page ? page : this.page;
+    if ( p.isClosed ) {
+      // console.log('Not taking screenshot. page is already closed.');
+      // return;
+    }
+
     const tempFile = temporaryFile({ extension: 'png' });
-
-    await this.page.screenshot({ path: tempFile, fullPage: this.fullPage });
-    this.printFile(tempFile);
+    try {
+      await p.screenshot({ path: tempFile, fullPage: this.fullPage });
+    }
+    catch (e) {
+      console.log(`🤯 ${e.stack}`);
+      return;
+    };
+    await this.printFile(tempFile);
   };
 
-  printImage = (file: string) => {
-    const output = execSync(`${this.command} ${file}`);
-    console.log(output.toString());
+  printImage = async (file: string) => {
+    try {
+      if (this.command === 'terminal-image') {
+        const opts = process.env.CI === 'true' ? { width: 50 } : { width: '50%' };
+        console.log(await terminalImage.file(file, opts));
+      }
+      else {
+        const output = execSync(`${this.command} ${file}`, { maxBuffer: 1048577 });
+        console.log(output.toString());
+      }
+    }
+    catch (e) {
+      console.log(`🤯 ${e.message}`);
+    }
   };
 
-  addListener = () => {
-    this.page.on('response', async (response: Response) => {
+  addListener = (page?: Page) => {
+    console.log(`➕ adding listener`);
+    const p = page ? page : this.page;
+    p.on('close', async data => {
+      console.log(`✋ closed ${data.url()}`);
+    });
+    p.on('request',async data => {
+        console.log(`🆕 requested ${data.url()}`);
+    });
+    p.on('response', async (response: Response) => {
       if (!this.listen) {
         return;
       }
       if (response.request().resourceType() !== 'document') {
+        console.log(`ignoring ${response.request().resourceType()}`);
         return;
       }
 
       console.log(
         [
-          response.status(),
           responseStatus(response),
+          response.status(),
           response.request().method().padEnd(this.methodPadLength, ' '),
           response.url(),
           await contentType(response),
@@ -91,7 +123,7 @@ export class DebugPlaywright {
       const tempFile = temporaryFile({ extension: ext });
       const buffer = await response.body();
       writeFileSync(tempFile, buffer);
-      this.printFile(tempFile);
+      await this.printFile(tempFile);
       return;
     }
 
