@@ -47,9 +47,9 @@ export class DebugPlaywright {
 
   printScreenshot = async (page?: Page) => {
     const p = page ? page : this.page;
-    if ( p.isClosed ) {
-      // console.log('Not taking screenshot. page is already closed.');
-      // return;
+    if ( p.isClosed() ) {
+      console.log('Not taking screenshot. page is already closed.');
+      return;
     }
 
     const tempFile = temporaryFile({ extension: 'png' });
