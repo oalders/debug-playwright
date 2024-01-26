@@ -20,6 +20,7 @@ export class DebugPlaywright {
   public fullPage: boolean;
   public listen: boolean;
   public methodPadLength: number;
+  public logAssetRequests: boolean;
   public screenshots: boolean;
   public page: Page;
 
@@ -35,6 +36,7 @@ export class DebugPlaywright {
     this.command = command;
     this.fullPage = fullPage;
     this.listen = listen;
+    this.logAssetRequests = false;
     this.methodPadLength = 4;
     this.addListener();
   }
@@ -84,14 +86,26 @@ export class DebugPlaywright {
       console.log(`✋ closed ${data.url()}`);
     });
     p.on('request',async data => {
-        console.log(`🆕 requested ${data.url()}`);
+      if (!this.listen) {
+        return;
+      }
+      if (data.method() !== 'get' && data.resourceType() !== 'document') {
+        if ( this.logAssetRequests ) {
+          console.log(`🆕 requesting ${data.url()}`);
+        }
+        return;
+      }
+      console.log(`🆕 requesting ${data.url()}`);
+      if (this.screenshots) {
+        await this.printScreenshot();
+      }
     });
     p.on('response', async (response: Response) => {
       if (!this.listen) {
         return;
       }
       if (response.request().resourceType() !== 'document') {
-        console.log(`ignoring ${response.request().resourceType()}`);
+        // console.log(`ignoring ${response.request().resourceType()}`);
         return;
       }
 
