@@ -50,6 +50,10 @@ To open last HTML report run:
 
 ## Usage
 
+```typescript
+import { DebugPlaywright } from '../debug-playwright/lib/debug.js';
+```
+
 ### Default
 
 Run debugging with the defaults. Requires you to be running inside `wezterm`
@@ -75,4 +79,12 @@ dp.formatContent = true;
 
 // print a screenshot on demand
 await dp.printScreenshot();
+```
+
+### Attach to a BrowserContext
+
+```typescript
+context.on('page', async (p) => {
+  new DebugPlaywright(p);
+});
 ```
