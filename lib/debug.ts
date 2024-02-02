@@ -54,6 +54,7 @@ export class DebugPlaywright {
 
     const tempFile = temporaryFile({ extension: 'png' });
     try {
+      p.waitForLoadState('domcontentloaded');
       await p.screenshot({ path: tempFile, fullPage: this.fullPage });
     }
     catch (e) {
@@ -100,12 +101,30 @@ export class DebugPlaywright {
         await this.printScreenshot();
       }
     });
+    p.on('requestfinished', async data => {
+      if (!this.listen) {
+        return;
+      }
+      if (data.method() !== 'get' && data.resourceType() !== 'document') {
+        if ( this.logAssetRequests ) {
+          console.log(`🆕 requesting ${data.url()}`);
+        }
+        return;
+      }
+      console.log(`🆕 requestfinished ${data.url()}`);
+      if (this.screenshots) {
+        await this.printScreenshot();
+      }
+    });
     p.on('response', async (response: Response) => {
       if (!this.listen) {
         return;
       }
       if (response.request().resourceType() !== 'document') {
         // console.log(`ignoring ${response.request().resourceType()}`);
+        return;
+      }
+      if( responseStatus(response) === '🚀' ) {
         return;
       }
 
@@ -121,14 +140,14 @@ export class DebugPlaywright {
       if (this.formatContent) {
         await this.dumpformattedContent(response);
       }
-      if (this.screenshots) {
-        await this.printScreenshot();
-      }
+      // if (this.screenshots) {
+        // await this.printScreenshot();
+      // }
     });
   };
 
   dumpformattedContent = async (response: Response) => {
-    if (responseStatus(response) === '💩') {
+    if (responseStatus(response) === '💩' || responseStatus(response) === '🚀' ) {
       return;
     }
 
