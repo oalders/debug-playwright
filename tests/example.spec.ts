@@ -33,14 +33,22 @@ test('2xx JSON', async ({ page }) => {
   await expect(page).not.toHaveTitle('title');
 });
 
-test('2xx png', async ({ page }) => {
+test.only('2xx png wezterm', async ({ page }) => {
+  if (process.env.CI === 'true') {
+      test.skip();
+  }
   const dp = new DebugPlaywright(page, false);
   dp.formatContent = true;
-  if (process.env.CI === 'true') {
-    dp.command = 'terminal-image'
-  }
   await page.goto('https://vilerichard.com/static/photos/group1.jpg');
 
+  await expect(page).not.toHaveTitle('title');
+});
+
+test.only('2xx png terminal-image', async ({ page }) => {
+  const dp = new DebugPlaywright(page, false);
+  dp.formatContent = true;
+  dp.command = 'terminal-image'
+  await page.goto('https://vilerichard.com/static/photos/group1.jpg');
   await expect(page).not.toHaveTitle('title');
 });
 
