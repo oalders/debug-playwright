@@ -87,6 +87,13 @@ export class DebugPlaywright {
     const p = page ? page : this.page;
     p.on('close', async data => {
       console.log(`✋ closed ${data.url()}`);
+      // if data.url is a base64 encoded string, then it's a data url
+      // decode and console.log the first 1024 characters
+      if (data.url().startsWith('data:text/html;base64') && this.screenshots) {
+        // This is not a screenshot, but it's in the spirit of the thing.
+        const decoded = Buffer.from(data.url().split(',')[1], 'base64').toString();
+        console.log(decoded.slice(0, 1024 * 5));
+      }
     });
     p.on('request',async data => {
       this.requestCount = this.requestCount + 1;
