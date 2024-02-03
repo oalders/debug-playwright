@@ -33,7 +33,7 @@ test('2xx JSON', async ({ page }) => {
   await expect(page).not.toHaveTitle('title');
 });
 
-test.only('2xx png wezterm', async ({ page }) => {
+test('2xx png wezterm', async ({ page }) => {
   if (process.env.CI === 'true') {
       test.skip();
   }
@@ -44,7 +44,7 @@ test.only('2xx png wezterm', async ({ page }) => {
   await expect(page).not.toHaveTitle('title');
 });
 
-test.only('2xx png terminal-image', async ({ page }) => {
+test('2xx png terminal-image', async ({ page }) => {
   const dp = new DebugPlaywright(page, false);
   dp.formatContent = true;
   dp.command = 'terminal-image'
