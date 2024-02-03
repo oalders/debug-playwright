@@ -74,3 +74,10 @@ test('2xx screenshot default', async ({ page }) => {
   await new Promise(resolve => setTimeout(resolve, 500));
   await expect(page).toHaveTitle(/Example Domain/);
 });
+
+test('data url', async ({page}) => {
+  const html = '<b>I am bold</b>';
+  const url = `data:text/html;base64,${Buffer.from(html).toString('base64')}`;
+  new DebugPlaywright(page);
+  await page.goto(url);
+});
