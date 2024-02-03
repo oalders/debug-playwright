@@ -23,6 +23,7 @@ export class DebugPlaywright {
   public logAssetRequests: boolean;
   public screenshots: boolean;
   public page: Page;
+  private requestCount: number;
 
   constructor(
     page: Page,
@@ -39,6 +40,7 @@ export class DebugPlaywright {
     this.logAssetRequests = false;
     this.methodPadLength = 4;
     this.addListener();
+    this.requestCount = 0;
   }
 
   printFile = async (file: string) => {
@@ -87,7 +89,11 @@ export class DebugPlaywright {
       console.log(`✋ closed ${data.url()}`);
     });
     p.on('request',async data => {
-      if (!this.listen) {
+      this.requestCount = this.requestCount + 1;
+      // This is primarily useful to see the state of a page just before it is
+      // submitted. So, if this is the very first request, then we don't need to
+      // see what the page looks like before anything has happened.
+      if (this.requestCount === 1 || !this.listen) {
         return;
       }
       if (data.method() !== 'get' && data.resourceType() !== 'document') {
