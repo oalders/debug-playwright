@@ -56,7 +56,7 @@ export class DebugPlaywright {
 
     const tempFile = temporaryFile({ extension: 'png' });
     try {
-      p.waitForLoadState('domcontentloaded');
+      await p.waitForLoadState('domcontentloaded');
       await p.screenshot({ path: tempFile, fullPage: this.fullPage });
     }
     catch (e) {
@@ -83,9 +83,9 @@ export class DebugPlaywright {
   };
 
   addListener = (page?: Page) => {
-    console.log(`➕ adding listener`);
+    console.log('➕ adding listener');
     const p = page ? page : this.page;
-    p.on('close', async data => {
+    p.on('close', data => {
       console.log(`✋ closed ${data.url()}`);
       // if data.url is a base64 encoded string, then it's a data url
       // decode and console.log the first 1024 characters
