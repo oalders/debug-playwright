@@ -13,11 +13,20 @@ test('2xx', async ({ page }) => {
   await expect(page).toHaveTitle(/Example Domain/);
 });
 
+test('2xx lynx', async ({ page }) => {
+  const dp = new DebugPlaywright(page, false);
+  dp.formatContent = true;
+  await page.goto('https://example.com');
+  await new Promise(resolve => setTimeout(resolve, 100));
+
+  await expect(page).toHaveTitle(/Example Domain/);
+});
+
 test('2xx terminal-image', async ({ page }) => {
   const dp = new DebugPlaywright(page);
   dp.command = 'terminal-image';
   await page.goto('https://example.com');
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise(resolve => setTimeout(resolve, 200));
   expect(page.getByRole('link', { name: /More information/ })).toBeTruthy();
 
   // Expect a title "to contain" a substring.
@@ -40,6 +49,17 @@ test('2xx png', async ({ page }) => {
     dp.command = 'terminal-image'
   }
   await page.goto('https://vilerichard.com/static/photos/group1.jpg');
+  await new Promise(resolve => setTimeout(resolve, 100));
+
+  await expect(page).not.toHaveTitle('title');
+});
+
+test('2xx png terminal-image', async ({ page }) => {
+  const dp = new DebugPlaywright(page, false);
+  dp.formatContent = true;
+  dp.command = 'terminal-image'
+  await page.goto('https://vilerichard.com/static/photos/group1.jpg');
+  await new Promise(resolve => setTimeout(resolve, 100));
 
   await expect(page).not.toHaveTitle('title');
 });
