@@ -3,7 +3,6 @@ import { spawn } from 'node:child_process';
 import { temporaryFile } from 'tempy';
 import { writeFileSync } from 'node:fs';
 import type { Page, Response } from '@playwright/test';
-import terminalImage from 'terminal-image';
 
 const responseStatus = (response: Response) => {
   const code = response.status();
@@ -70,7 +69,8 @@ export class DebugPlaywright {
     try {
       if (this.command === 'terminal-image') {
         const opts = process.env.CI === 'true' ? { width: 50 } : { width: '50%' };
-        console.log(await terminalImage.file(file, opts));
+        const ti = await import('terminal-image');
+        console.log(await ti.default.file(file, opts));
       }
       else {
         const output = execSync(`${this.command} ${file}`, { maxBuffer: 1048577 });

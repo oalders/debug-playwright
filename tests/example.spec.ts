@@ -4,7 +4,7 @@ import { DebugPlaywright } from '../lib/debug';
 test('2xx', async ({ page }) => {
   const dp = new DebugPlaywright(page);
   if (process.env.CI === 'true') {
-    dp.command = 'terminal-image'
+    dp.command = 'terminal-image';
   }
   await page.goto('https://example.com');
   await new Promise(resolve => setTimeout(resolve, 100));
@@ -46,7 +46,7 @@ test('2xx png', async ({ page }) => {
   const dp = new DebugPlaywright(page, false);
   dp.formatContent = true;
   if (process.env.CI === 'true') {
-    dp.command = 'terminal-image'
+    dp.command = 'terminal-image';
   }
   await page.goto('https://vilerichard.com/static/photos/group1.jpg');
   await new Promise(resolve => setTimeout(resolve, 100));
@@ -57,7 +57,7 @@ test('2xx png', async ({ page }) => {
 test('2xx png terminal-image', async ({ page }) => {
   const dp = new DebugPlaywright(page, false);
   dp.formatContent = true;
-  dp.command = 'terminal-image'
+  dp.command = 'terminal-image';
   await page.goto('https://vilerichard.com/static/photos/group1.jpg');
   await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -68,7 +68,7 @@ test('4xx', async ({ page }) => {
   const dp = new DebugPlaywright(page);
   dp.formatContent = true;
   if (process.env.CI === 'true') {
-    dp.command = 'terminal-image'
+    dp.command = 'terminal-image';
   }
   await page.goto('https://example.com/404');
   await new Promise(resolve => setTimeout(resolve, 500));
@@ -80,7 +80,7 @@ test('2xx screenshot default', async ({ page }) => {
   const dp = new DebugPlaywright(page);
   dp.screenshots = true;
   if (process.env.CI === 'true') {
-    dp.command = 'terminal-image'
+    dp.command = 'terminal-image';
   }
   await page.goto('https://example.com');
   await new Promise(resolve => setTimeout(resolve, 500));
