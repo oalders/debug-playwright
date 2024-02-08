@@ -12,23 +12,28 @@ You may also need to install `wezterm` and `lynx`.
 ## Run Tests
 
 ```bash
-npx playwright test --project chromium --workers=1
+npx playwright test
 ```
 
 ## Run Tests in Headed Mode
 
 ```bash
-npx playwright test --project chromium --workers=1 --headed
+npx playwright test --headed
 ```
 
 ## Expected Output
 
+### HTML formatted as text
+
 ```text
-$ npx playwright test --project chromium --workers=1
+npx playwright test -g lynx
 
 Running 1 test using 1 worker
-[chromium] › example.spec.ts:4:5 › has title
-200 https://example.com/
+[chromium] › example.spec.ts:16:1 › 2xx lynx
+➕ adding listener
+🆕 requesting https://example.com/
+💖 200 GET  https://example.com/ text/html; charset=UTF-8
+✋ closed https://example.com/
 Example Domain
 
    This domain is for use in illustrative examples in documents. You may
@@ -41,7 +46,7 @@ References
 
    1. https://www.iana.org/domains/example
 
-  1 passed (1.5s)
+  1 passed (1.9s)
 
 To open last HTML report run:
 
