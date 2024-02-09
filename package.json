@@ -17,8 +17,5 @@
   },
   "dependencies": {
     "tempy": "^3.1.0"
-  },
-  "optionalDependencies": {
-    "terminal-image": "^2.0.0"
   }
 }

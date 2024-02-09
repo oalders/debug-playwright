@@ -67,15 +67,8 @@ export class DebugPlaywright {
 
   printImage = async (file: string) => {
     try {
-      if (this.command === 'terminal-image') {
-        const opts = process.env.CI === 'true' ? { width: 50 } : { width: '50%' };
-        const ti = await import('terminal-image');
-        console.log(await ti.default.file(file, opts));
-      }
-      else {
         const output = execSync(`${this.command} ${file}`, { maxBuffer: 1048577 });
         console.log(output.toString());
-      }
     }
     catch (e) {
       console.log(`🤯 ${e.message}`);
