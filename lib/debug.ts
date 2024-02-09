@@ -10,7 +10,7 @@ const responseStatus = (response: Response) => {
 };
 
 const contentType = async (response: Response) => {
-  return response.headerValue('content-type');
+  return await response.headerValue('content-type');
 };
 
 export class DebugPlaywright {
