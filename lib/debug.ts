@@ -1,8 +1,8 @@
+import type { Page, Response } from '@playwright/test';
 import { execSync } from 'node:child_process';
 import { spawn } from 'node:child_process';
-import { temporaryFile } from 'tempy';
 import { writeFileSync } from 'node:fs';
-import type { Page, Response } from '@playwright/test';
+import { temporaryFile } from 'tempy';
 
 const responseStatus = (response: Response) => {
   const code = response.status();
@@ -42,13 +42,13 @@ export class DebugPlaywright {
     this.requestCount = 0;
   }
 
-  printFile = async (file: string) => {
-    await this.printImage(file);
+  printFile = (file: string) => {
+    this.printImage(file);
   };
 
   printScreenshot = async (page?: Page) => {
     const p = page ? page : this.page;
-    if ( p.isClosed() ) {
+    if (p.isClosed()) {
       console.log('Not taking screenshot. page is already closed.');
       return;
     }
@@ -57,20 +57,20 @@ export class DebugPlaywright {
     try {
       await p.waitForLoadState('domcontentloaded');
       await p.screenshot({ path: tempFile, fullPage: this.fullPage });
-    }
-    catch (e) {
+    } catch (e) {
       console.log(`🤯 ${e.stack}`);
       return;
-    };
-    await this.printFile(tempFile);
+    }
+    this.printFile(tempFile);
   };
 
-  printImage = async (file: string) => {
+  printImage = (file: string) => {
     try {
-        const output = execSync(`${this.command} ${file}`, { maxBuffer: 1048577 });
-        console.log(output.toString());
-    }
-    catch (e) {
+      const output = execSync(`${this.command} ${file}`, {
+        maxBuffer: 1048577,
+      });
+      console.log(output.toString());
+    } catch (e) {
       console.log(`🤯 ${e.message}`);
     }
   };
@@ -78,17 +78,20 @@ export class DebugPlaywright {
   addListener = (page?: Page) => {
     console.log('➕ adding listener');
     const p = page ? page : this.page;
-    p.on('close', data => {
+    p.on('close', (data) => {
       console.log(`✋ closed ${data.url()}`);
       // if data.url is a base64 encoded string, then it's a data url
       // decode and console.log the first 1024 characters
       if (data.url().startsWith('data:text/html;base64') && this.screenshots) {
         // This is not a screenshot, but it's in the spirit of the thing.
-        const decoded = Buffer.from(data.url().split(',')[1], 'base64').toString();
+        const decoded = Buffer.from(
+          data.url().split(',')[1],
+          'base64',
+        ).toString();
         console.log(decoded.slice(0, 1024 * 5));
       }
     });
-    p.on('request',async data => {
+    p.on('request', async (data) => {
       this.requestCount = this.requestCount + 1;
       // This is primarily useful to see the state of a page just before it is
       // submitted. So, if this is the very first request, then we don't need to
@@ -97,7 +100,7 @@ export class DebugPlaywright {
         return;
       }
       if (data.method() !== 'get' && data.resourceType() !== 'document') {
-        if ( this.logAssetRequests ) {
+        if (this.logAssetRequests) {
           console.log(`🆕 requesting ${data.url()}`);
         }
         return;
@@ -107,12 +110,12 @@ export class DebugPlaywright {
         await this.printScreenshot();
       }
     });
-    p.on('requestfinished', async data => {
+    p.on('requestfinished', async (data) => {
       if (!this.listen) {
         return;
       }
       if (data.method() !== 'get' && data.resourceType() !== 'document') {
-        if ( this.logAssetRequests ) {
+        if (this.logAssetRequests) {
           console.log(`🆕 requesting ${data.url()}`);
         }
         return;
@@ -130,7 +133,7 @@ export class DebugPlaywright {
         // console.log(`ignoring ${response.request().resourceType()}`);
         return;
       }
-      if( responseStatus(response) === '🚀' ) {
+      if (responseStatus(response) === '🚀') {
         return;
       }
 
@@ -141,7 +144,7 @@ export class DebugPlaywright {
           response.request().method().padEnd(this.methodPadLength, ' '),
           response.url(),
           await contentType(response),
-        ].join(' ')
+        ].join(' '),
       );
       if (this.formatContent) {
         await this.dumpformattedContent(response);
@@ -150,7 +153,10 @@ export class DebugPlaywright {
   };
 
   dumpformattedContent = async (response: Response) => {
-    if (responseStatus(response) === '💩' || responseStatus(response) === '🚀' ) {
+    if (
+      responseStatus(response) === '💩' ||
+      responseStatus(response) === '🚀'
+    ) {
       return;
     }
 
@@ -159,7 +165,7 @@ export class DebugPlaywright {
       const tempFile = temporaryFile({ extension: ext });
       const buffer = await response.body();
       writeFileSync(tempFile, buffer);
-      await this.printFile(tempFile);
+      this.printFile(tempFile);
       return;
     }
 
@@ -170,7 +176,7 @@ export class DebugPlaywright {
     child.stdin.end();
 
     child.stdout.setEncoding('utf8');
-    child.stdout.on('data', function(data) {
+    child.stdout.on('data', function (data) {
       console.log(data);
     });
   };
