@@ -153,9 +153,6 @@ export class DebugPlaywright {
       if (this.formatContent) {
         await this.dumpformattedContent(response);
       }
-      // if (this.screenshots) {
-        // await this.printScreenshot();
-      // }
     });
   };
 
