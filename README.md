@@ -89,7 +89,7 @@ await dp.printScreenshot();
 ### Attach to a BrowserContext
 
 ```typescript
-context.on('page', async (p) => {
+context.on('page', (p) => {
   new DebugPlaywright(p);
 });
 ```
