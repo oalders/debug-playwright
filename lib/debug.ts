@@ -160,12 +160,15 @@ export class DebugPlaywright {
       return;
     }
 
-    if ((await contentType(response)).startsWith('image')) {
-      const ext = (await contentType(response)).split('/')[1];
+    const type = await contentType(response);
+    if (type?.startsWith('image')) {
+      const ext = type.split('/')[1] ?? 'png'; // default to 'png' if null
       const tempFile = temporaryFile({ extension: ext });
       const buffer = await response.body();
-      writeFileSync(tempFile, buffer);
-      this.printFile(tempFile);
+      if (buffer) {
+        writeFileSync(tempFile, buffer);
+        this.printFile(tempFile);
+      }
       return;
     }
 
