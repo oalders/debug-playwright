@@ -94,6 +94,17 @@ context.on('page', (p) => {
 });
 ```
 
+### Print Screenshot on Test Failure
+
+```typescript
+test.afterEach(async ({ page }, testInfo) => {
+  if (testInfo.status === 'failed') {
+    const dp = new DebugPlaywright(page, true,true);
+    await dp.printScreenshot();
+  }
+});
+```
+
 ### Screenshots
 
 If your full page screenshots are hard to read (e.g. a navbar is clobbering
