@@ -15,34 +15,36 @@ const contentType = async (response: Response) => {
 
 interface DebugOptions {
   page: Page;
-  screenshots?: boolean;
+  command?: string;
+  formatContent?: boolean;
   fullPage?: boolean;
   listen?: boolean;
-  command?: string;
   logAssetRequests?: boolean;
+  screenshots?: boolean;
 }
 
 export class DebugPlaywright {
+    public page: Page;
     public command: string;
     public formatContent: boolean;
     public fullPage: boolean;
     public listen: boolean;
-    public methodPadLength: number;
     public logAssetRequests: boolean;
+    public methodPadLength: number;
     public screenshots: boolean;
-    public page: Page;
     private requestCount: number;
 
-    constructor({ page, screenshots = true, fullPage = true, listen = true, command = 'wezterm imgcat', logAssetRequests = false }: DebugOptions) {
+    constructor({ page, screenshots = true, fullPage = true, listen = true, command = 'wezterm imgcat', logAssetRequests = false, formatContent = false }: DebugOptions) {
       this.page = page;
-      this.screenshots = screenshots;
+      this.addListener();
       this.command = command;
+      this.formatContent = formatContent;
       this.fullPage = fullPage;
       this.listen = listen;
       this.logAssetRequests = logAssetRequests;
       this.methodPadLength = 4;
-      this.addListener();
       this.requestCount = 0;
+      this.screenshots = screenshots;
     }
 
   printFile = (file: string) => {
