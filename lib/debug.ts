@@ -22,6 +22,13 @@ export function afterEachHandler() {
   };
 }
 
+export function beforeEachHandler() {
+  return async ({ page }: { page: Page }, testInfo: any) => {
+    console.log(`🐝 setting debugger on page in "${testInfo.title}"`);
+    new DebugPlaywright({ page: page });
+  };
+}
+
 interface DebugOptions {
   page: Page;
   command?: string;

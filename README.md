@@ -94,9 +94,27 @@ context.on('page', (p) => {
 });
 ```
 
+### Debug on Every Test in File
+
+#### Default beforeEach Handler
+
+```typescript
+import { test } from '@playwright/test';
+import { beforeEachHandler } from '../lib/debug';
+
+test.beforeEach(beforeEachHandler());
+```
+
+#### Custom beforeEAch Handler
+
+```typescript
+test.beforeEach(async ({ page }, testInfo) => {
+  new DebugPlaywright({page: page});
+});
+
 ### Print Screenshot on Test Failure
 
-#### Default Handler
+#### Default afterEach Handler
 
 ```typescript
 import { test } from '@playwright/test';
@@ -105,7 +123,7 @@ import { afterEachHandler } from '../lib/debug';
 test.afterEach(afterEachHandler());
 ```
 
-#### Custom Handler
+#### Custom afterEach Handler
 
 ```typescript
 test.afterEach(async ({ page }, testInfo) => {
