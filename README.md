@@ -65,13 +65,13 @@ Run debugging with the defaults. Requires you to be running inside `wezterm`
 but **not** inside `tmux`.
 
 ```typescript
-const dp = new DebugPlaywright(page);
+const dp = new DebugPlaywright({ page: page });
 ```
 
 ### Configure
 
 ```typescript
-const dp = new DebugPlaywright(page);
+const dp = new DebugPlaywright({ page: page });
 
 // take full page screenshots
 dp.fullPage = true;
@@ -99,8 +99,7 @@ context.on('page', (p) => {
 ```typescript
 test.afterEach(async ({ page }, testInfo) => {
   if (testInfo.status === 'failed') {
-    const dp = new DebugPlaywright(page, true,true);
-    await dp.printScreenshot();
+    await new DebugPlaywright({page: page}).printScreenshot();
   }
 });
 ```
