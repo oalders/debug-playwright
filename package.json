@@ -7,15 +7,18 @@
   "directories": {
     "test": "tests"
   },
-  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.41.2",
-    "@types/node": "^20.11.17"
+    "@types/node": "^20.11.17",
+    "prettier": "^3.2.5"
   },
   "dependencies": {
     "tempy": "^3.1.0"
-  }
+  },
+  "scripts": {
+      "tidy": "prettier --write '**/*.{ts,js,json}'"
+    }
 }
