@@ -13,6 +13,15 @@ const contentType = async (response: Response) => {
   return await response.headerValue('content-type');
 };
 
+export function afterEachHandler() {
+  return async ({ page }: { page: Page }, testInfo: any) => {
+    if (testInfo.status === 'failed') {
+      console.log('📷 screenshot on failure');
+      await new DebugPlaywright({ page }).printScreenshot();
+    }
+  };
+}
+
 interface DebugOptions {
   page: Page;
   command?: string;

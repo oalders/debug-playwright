@@ -1,19 +1,20 @@
 import { test, expect } from '@playwright/test';
-import { DebugPlaywright } from '../lib/debug';
+import { DebugPlaywright, afterEachHandler } from '../lib/debug';
 
-test.afterEach(async ({ page }, testInfo) => {
-  if (testInfo.status === 'failed') {
-    const dp = new DebugPlaywright({page: page});
-    if (process.env.CI === 'true') {
-      dp.command = 'image';
+if (process.env.CI === 'true') {
+  test.afterEach(async ({ page }, testInfo) => {
+    if (testInfo.status === 'failed') {
+      console.log('🍰 Screenshot on error');
+      const dp = new DebugPlaywright({ page: page, command: 'image' });
+      await dp.printScreenshot();
     }
-    console.log('🍰 Screenshot on error');
-    await dp.printScreenshot();
-  }
-});
+  });
+} else {
+  test.afterEach(afterEachHandler());
+}
 
 // We want this to fail, because we want to trigger the afterEach hook
-test.only('2xx screenshot on error', async ({ page }) => {
+test('2xx screenshot on error', async ({ page }) => {
   test.fail();
   const dp = new DebugPlaywright({page: page });
   if (process.env.CI === 'true') {

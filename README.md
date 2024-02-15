@@ -96,6 +96,17 @@ context.on('page', (p) => {
 
 ### Print Screenshot on Test Failure
 
+#### Default Handler
+
+```typescript
+import { test } from '@playwright/test';
+import { afterEachHandler } from '../lib/debug';
+
+test.afterEach(afterEachHandler());
+```
+
+#### Custom Handler
+
 ```typescript
 test.afterEach(async ({ page }, testInfo) => {
   if (testInfo.status === 'failed') {
