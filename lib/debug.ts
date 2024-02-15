@@ -33,28 +33,36 @@ interface DebugOptions {
 }
 
 export class DebugPlaywright {
-    public page: Page;
-    public command: string;
-    public formatContent: boolean;
-    public fullPage: boolean;
-    public listen: boolean;
-    public logAssetRequests: boolean;
-    public methodPadLength: number;
-    public screenshots: boolean;
-    private requestCount: number;
+  public page: Page;
+  public command: string;
+  public formatContent: boolean;
+  public fullPage: boolean;
+  public listen: boolean;
+  public logAssetRequests: boolean;
+  public methodPadLength: number;
+  public screenshots: boolean;
+  private requestCount: number;
 
-    constructor({ page, screenshots = true, fullPage = true, listen = true, command = 'wezterm imgcat', logAssetRequests = false, formatContent = false }: DebugOptions) {
-      this.page = page;
-      this.addListener();
-      this.command = command;
-      this.formatContent = formatContent;
-      this.fullPage = fullPage;
-      this.listen = listen;
-      this.logAssetRequests = logAssetRequests;
-      this.methodPadLength = 4;
-      this.requestCount = 0;
-      this.screenshots = screenshots;
-    }
+  constructor({
+    page,
+    screenshots = true,
+    fullPage = true,
+    listen = true,
+    command = 'wezterm imgcat',
+    logAssetRequests = false,
+    formatContent = false,
+  }: DebugOptions) {
+    this.page = page;
+    this.addListener();
+    this.command = command;
+    this.formatContent = formatContent;
+    this.fullPage = fullPage;
+    this.listen = listen;
+    this.logAssetRequests = logAssetRequests;
+    this.methodPadLength = 4;
+    this.requestCount = 0;
+    this.screenshots = screenshots;
+  }
 
   printFile = (file: string) => {
     this.printImage(file);
