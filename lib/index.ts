@@ -79,8 +79,12 @@ export class DebugPlaywright {
     try {
       await p.waitForLoadState('domcontentloaded');
       await p.screenshot({ path: tempFile, fullPage: this.fullPage });
-    } catch (e) {
-      console.log(`🤯 ${e.stack}`);
+    } catch (e: any) {
+      if (e instanceof Error) {
+        console.log(`🤯 ${e.stack}`);
+      } else {
+        console.log(`🤯 ${e}`);
+      }
       return;
     }
     this.printFile(tempFile);
@@ -92,8 +96,12 @@ export class DebugPlaywright {
         maxBuffer: 1048577,
       });
       console.log(output.toString());
-    } catch (e) {
-      console.log(`🤯 ${e.message}`);
+    } catch (e: any) {
+      if (e instanceof Error) {
+        console.log(`🤯 ${e.message}`);
+      } else {
+        console.log(`🤯 ${e}`);
+      }
     }
   };
 
