@@ -1,6 +1,30 @@
 import { test, expect } from '@playwright/test';
 import { DebugPlaywright } from '../lib/debug';
 
+test.afterEach(async ({ page }, testInfo) => {
+  if (testInfo.status === 'failed') {
+    const dp = new DebugPlaywright({page: page});
+    if (process.env.CI === 'true') {
+      dp.command = 'image';
+    }
+    console.log('🍰 Screenshot on error');
+    await dp.printScreenshot();
+  }
+});
+
+// We want this to fail, because we want to trigger the afterEach hook
+test.only('2xx screenshot on error', async ({ page }) => {
+  test.fail();
+  const dp = new DebugPlaywright({page: page });
+  if (process.env.CI === 'true') {
+    dp.command = 'image';
+  }
+  await page.goto('https://example.com');
+  await new Promise(resolve => setTimeout(resolve, 400));
+
+  await expect(page).toHaveTitle(/🐮/, { timeout: 10 });
+});
+
 test('2xx', async ({ page }) => {
   const dp = new DebugPlaywright({page: page });
   if (process.env.CI === 'true') {
