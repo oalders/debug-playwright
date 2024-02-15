@@ -1,0 +1,9 @@
+node_modules
+*.map
+tests
+.github
+bin/
+playwright-report/
+.prettierrc
+*tgz
+playwright.config*

@@ -3,12 +3,14 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "index.d.ts",
   "directories": {
-    "test": "tests"
+    "test": "tests",
+    "publish": "npm publish"
   },
   "keywords": [],
-  "author": "",
+  "author": "Olaf Alders",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.41.2",
@@ -19,6 +21,8 @@
     "tempy": "^3.1.0"
   },
   "scripts": {
+      "build": "tsc",
+      "test": "playwright test",
       "tidy": "prettier --write '**/*.{ts,js,json}'"
-    }
+  }
 }
