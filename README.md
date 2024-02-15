@@ -110,7 +110,7 @@ If your full page screenshots are hard to read (e.g. a navbar is clobbering
 content in the middle of the page), try increasing the height of the viewport
 to the maximum that makes sense for your monitor.
 
-```nodejs
+```typescript
 await page.setViewportSize({
   width: 1200,
   height: 2000,
