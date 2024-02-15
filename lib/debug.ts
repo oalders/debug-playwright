@@ -13,34 +13,37 @@ const contentType = async (response: Response) => {
   return await response.headerValue('content-type');
 };
 
-export class DebugPlaywright {
-  public command: string;
-  public formatContent: boolean;
-  public fullPage: boolean;
-  public listen: boolean;
-  public methodPadLength: number;
-  public logAssetRequests: boolean;
-  public screenshots: boolean;
-  public page: Page;
-  private requestCount: number;
+interface DebugOptions {
+  page: Page;
+  screenshots?: boolean;
+  fullPage?: boolean;
+  listen?: boolean;
+  command?: string;
+  logAssetRequests?: boolean;
+}
 
-  constructor(
-    page: Page,
-    screenshots: boolean = true,
-    fullPage: boolean = false,
-    listen: boolean = true,
-    command: string = 'wezterm imgcat',
-  ) {
-    this.page = page;
-    this.screenshots = screenshots;
-    this.command = command;
-    this.fullPage = fullPage;
-    this.listen = listen;
-    this.logAssetRequests = false;
-    this.methodPadLength = 4;
-    this.addListener();
-    this.requestCount = 0;
-  }
+export class DebugPlaywright {
+    public command: string;
+    public formatContent: boolean;
+    public fullPage: boolean;
+    public listen: boolean;
+    public methodPadLength: number;
+    public logAssetRequests: boolean;
+    public screenshots: boolean;
+    public page: Page;
+    private requestCount: number;
+
+    constructor({ page, screenshots = true, fullPage = true, listen = true, command = 'wezterm imgcat', logAssetRequests = false }: DebugOptions) {
+      this.page = page;
+      this.screenshots = screenshots;
+      this.command = command;
+      this.fullPage = fullPage;
+      this.listen = listen;
+      this.logAssetRequests = logAssetRequests;
+      this.methodPadLength = 4;
+      this.addListener();
+      this.requestCount = 0;
+    }
 
   printFile = (file: string) => {
     this.printImage(file);
