@@ -1,6 +1,5 @@
 import type { Page, Response } from '@playwright/test';
-import { execSync } from 'node:child_process';
-import { spawn } from 'node:child_process';
+import { execSync, spawn } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { temporaryFile } from 'tempy';
 
