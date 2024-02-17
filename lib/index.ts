@@ -78,7 +78,7 @@ export class DebugPlaywright {
   };
 
   printScreenshot = async (page?: Page) => {
-    const p = page ? page : this.page;
+    const p = page ?? this.page;
     if (p.isClosed()) {
       console.log('Not taking screenshot. page is already closed.');
       return;
