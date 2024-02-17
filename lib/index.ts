@@ -3,6 +3,9 @@ import { execSync, spawn } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { temporaryFile } from 'tempy';
 
+const DEFAULT_COMMAND = 'wezterm imgcat';
+const LOAD_STATE = 'domcontentloaded';
+
 const responseStatus = (response: Response) => {
   const code = response.status();
   return code < 300 ? '💖' : code < 400 ? '🚀' : '💩';
@@ -54,7 +57,7 @@ export class DebugPlaywright {
     screenshots = true,
     fullPage = true,
     listen = true,
-    command = 'wezterm imgcat',
+    command = DEFAULT_COMMAND,
     logAssetRequests = false,
     formatContent = false,
   }: DebugOptions) {
@@ -83,7 +86,7 @@ export class DebugPlaywright {
 
     const tempFile = temporaryFile({ extension: 'png' });
     try {
-      await p.waitForLoadState('domcontentloaded');
+      await p.waitForLoadState(LOAD_STATE);
       await p.screenshot({ path: tempFile, fullPage: this.fullPage });
     } catch (e) {
       console.log(`🤯 ${e.stack}`);
