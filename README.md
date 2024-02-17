@@ -56,7 +56,7 @@ To open last HTML report run:
 ## Usage
 
 ```typescript
-import { DebugPlaywright } from '../debug-playwright/lib/debug.js';
+import { DebugPlaywright } from '../debug-playwright/lib/index.js';
 ```
 
 ### Default
