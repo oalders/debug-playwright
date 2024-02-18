@@ -89,7 +89,11 @@ export class DebugPlaywright {
       await p.waitForLoadState(LOAD_STATE);
       await p.screenshot({ path: tempFile, fullPage: this.fullPage });
     } catch (e) {
-      console.log(`🤯 ${e.stack}`);
+      if (e instanceof Error) {
+        console.log(`🤯 ${e.stack}`);
+      } else {
+        console.log(`🤯 ${e}`);
+      }
       return;
     }
     this.printFile(tempFile);
@@ -102,7 +106,11 @@ export class DebugPlaywright {
       });
       console.log(output.toString());
     } catch (e) {
-      console.log(`🤯 ${e.message}`);
+      if (e instanceof Error) {
+        console.log(`🤯 ${e.message}`);
+      } else {
+        console.log(`🤯 ${e}`);
+      }
     }
   };
 
