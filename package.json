@@ -24,6 +24,6 @@
   },
   "scripts": {
       "build": "tsc",
-      "tidy": "prettier --write '**/*.{ts,js,json}'"
+      "tidy": "prettier --write '**/*.{ts,js}'"
     }
 }
