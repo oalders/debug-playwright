@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts"
+  ],
   "directories": {
     "test": "tests"
   },
@@ -19,6 +23,7 @@
     "tempy": "^3.1.0"
   },
   "scripts": {
+      "build": "tsc",
       "tidy": "prettier --write '**/*.{ts,js,json}'"
     }
 }
