@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { DebugPlaywright, afterEachHandler } from '../lib';
+import { DebugPlaywright, afterEachHandler } from '../src';
 
 if (process.env.CI === 'true') {
   test.afterEach(async ({ page }, testInfo) => {
