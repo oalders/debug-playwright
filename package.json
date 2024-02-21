@@ -12,8 +12,12 @@
     "test": "tests"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name" : "Olaf Alders",
+    "email" : "olaf@wundersolutions.com",
+    "url" : "https://www.wundersolutions.com"
+  },
+    "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.41.2",
     "@types/node": "^20.11.17",
