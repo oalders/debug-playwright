@@ -1,7 +1,7 @@
 {
   "name": "debug-playwright",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "index.js",
   "files": [
@@ -13,11 +13,11 @@
   },
   "keywords": [],
   "author": {
-    "name" : "Olaf Alders",
-    "email" : "olaf@wundersolutions.com",
-    "url" : "https://www.wundersolutions.com"
+    "name": "Olaf Alders",
+    "email": "olaf@wundersolutions.com",
+    "url": "https://www.wundersolutions.com"
   },
-    "license": "ISC",
+  "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.41.2",
     "@types/node": "^20.11.19",
@@ -27,8 +27,8 @@
     "tempy": "^3.1.0"
   },
   "scripts": {
-      "build": "tsc",
-      "prepublishOnly": "npm run build",
-      "tidy": "prettier --write '**/*.{ts,js}'"
-    }
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "tidy": "prettier --write '**/*.{ts,js}'"
+  }
 }
