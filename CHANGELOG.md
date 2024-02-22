@@ -1,8 +1,9 @@
 # Changelog
 
-## [0.1.0] - 2022-02-21
+## [0.1.0] - 2022-02-22
 
 ### Added
+
 - Initial release
 
 ### Changed
