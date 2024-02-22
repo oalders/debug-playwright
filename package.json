@@ -28,6 +28,7 @@
   },
   "scripts": {
       "build": "tsc",
+      "prepublishOnly": "npm run build",
       "tidy": "prettier --write '**/*.{ts,js}'"
     }
 }
