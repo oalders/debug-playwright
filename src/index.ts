@@ -34,7 +34,7 @@ export function beforeEachHandler() {
 interface DebugOptions {
   page: Page;
   command?: string;
-  formatContent?: boolean;
+  formattedContent?: boolean;
   fullPage?: boolean;
   listen?: boolean;
   logAssetRequests?: boolean;
@@ -44,7 +44,7 @@ interface DebugOptions {
 export class DebugPlaywright {
   public page: Page;
   public command: string;
-  public formatContent: boolean;
+  public formattedContent: boolean;
   public fullPage: boolean;
   public listen: boolean;
   public logAssetRequests: boolean;
@@ -59,11 +59,11 @@ export class DebugPlaywright {
     listen = true,
     command = DEFAULT_COMMAND,
     logAssetRequests = false,
-    formatContent = false,
+    formattedContent: formattedContent = false,
   }: DebugOptions) {
     this.page = page;
     this.command = command;
-    this.formatContent = formatContent;
+    this.formattedContent = formattedContent;
     this.fullPage = fullPage;
     this.listen = listen;
     this.logAssetRequests = logAssetRequests;
@@ -156,7 +156,7 @@ export class DebugPlaywright {
           await contentType(response),
         ].join(' '),
       );
-      if (this.formatContent) {
+      if (this.formattedContent) {
         await this.dumpformattedContent(response);
       }
     });

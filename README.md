@@ -80,7 +80,7 @@ dp.fullPage = true;
 dp.screenshots = false;
 
 // dump lynx output
-dp.formatContent = true;
+dp.formattedContent = true;
 
 // print a screenshot on demand
 await dp.printScreenshot();

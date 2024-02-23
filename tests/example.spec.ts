@@ -40,7 +40,7 @@ test('2xx', async ({ page }) => {
 
 test('2xx lynx', async ({ page }) => {
   const dp = new DebugPlaywright({ page: page, screenshots: false });
-  dp.formatContent = true;
+  dp.formattedContent = true;
   await page.goto('https://example.com');
   await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -60,7 +60,7 @@ test('2xx image', async ({ page }) => {
 
 test('2xx JSON', async ({ page }) => {
   const dp = new DebugPlaywright({ page: page, screenshots: false });
-  dp.formatContent = true;
+  dp.formattedContent = true;
 
   await page.goto('https://filesamples.com/samples/code/json/sample1.json');
 
@@ -69,7 +69,7 @@ test('2xx JSON', async ({ page }) => {
 
 test('2xx png', async ({ page }) => {
   const dp = new DebugPlaywright({ page: page, screenshots: false });
-  dp.formatContent = true;
+  dp.formattedContent = true;
   if (process.env.CI === 'true') {
     dp.command = 'image';
   }
@@ -81,7 +81,7 @@ test('2xx png', async ({ page }) => {
 
 test('2xx png image', async ({ page }) => {
   const dp = new DebugPlaywright({ page: page, screenshots: false });
-  dp.formatContent = true;
+  dp.formattedContent = true;
   dp.command = 'image';
   await page.goto('https://vilerichard.com/static/photos/group1.jpg');
   await new Promise((resolve) => setTimeout(resolve, 100));
@@ -91,7 +91,7 @@ test('2xx png image', async ({ page }) => {
 
 test('4xx', async ({ page }) => {
   const dp = new DebugPlaywright({ page: page });
-  dp.formatContent = true;
+  dp.formattedContent = true;
   if (process.env.CI === 'true') {
     dp.command = 'image';
   }
