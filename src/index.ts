@@ -76,10 +76,6 @@ export class DebugPlaywright {
     }
   }
 
-  printFile = (file: string) => {
-    this.printImage(file);
-  };
-
   printScreenshot = async (page?: Page) => {
     const p = page ?? this.page;
     if (p.isClosed()) {
@@ -99,7 +95,7 @@ export class DebugPlaywright {
       }
       return;
     }
-    this.printFile(tempFile);
+    this.printImage(tempFile);
   };
 
   printImage = (file: string) => {
@@ -181,7 +177,7 @@ export class DebugPlaywright {
       const buffer = await response.body();
       if (buffer) {
         writeFileSync(tempFile, buffer);
-        this.printFile(tempFile);
+        this.printImage(tempFile);
       }
       return;
     }
