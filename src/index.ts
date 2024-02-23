@@ -131,38 +131,10 @@ export class DebugPlaywright {
       }
     });
     p.on('request', async (data) => {
-      this.requestCount = this.requestCount + 1;
-      // This is primarily useful to see the state of a page just before it is
-      // submitted. So, if this is the very first request, then we don't need to
-      // see what the page looks like before anything has happened.
-      if (this.requestCount === 1 || !this.listen) {
-        return;
-      }
-      if (data.method() !== 'get' && data.resourceType() !== 'document') {
-        if (this.logAssetRequests) {
-          console.log(`🆕 requesting ${data.url()}`);
-        }
-        return;
-      }
-      console.log(`🆕 requesting ${data.url()}`);
-      if (this.screenshots) {
-        await this.printScreenshot();
-      }
+      this.handleRequestEvent(data, 'request');
     });
     p.on('requestfinished', async (data) => {
-      if (!this.listen) {
-        return;
-      }
-      if (data.method() !== 'get' && data.resourceType() !== 'document') {
-        if (this.logAssetRequests) {
-          console.log(`🆕 requesting ${data.url()}`);
-        }
-        return;
-      }
-      console.log(`🆕 requestfinished ${data.url()}`);
-      if (this.screenshots) {
-        await this.printScreenshot();
-      }
+      this.handleRequestEvent(data, 'requestfinished');
     });
     p.on('response', async (response: Response) => {
       if (!this.listen) {
@@ -231,5 +203,31 @@ export class DebugPlaywright {
     child.stdout.on('end', () => {
       console.log('Child process ended');
     });
+  };
+
+  handleRequestEvent = async (data: any, eventName: string) => {
+    if (!this.listen) {
+      return;
+    }
+    if (data.method() !== 'get' && data.resourceType() !== 'document') {
+      if (this.logAssetRequests) {
+        console.log(`🆕 ${eventName} ${data.url()}`);
+      }
+      return;
+    }
+
+    if (eventName === 'request') {
+      this.requestCount += 1;
+      // This is primarily useful to see the state of a page just before it is
+      // submitted. So, if this is the very first request, then we don't need to
+      // see what the page looks like before anything has happened.
+      if (this.requestCount === 1 || !this.listen) {
+        return;
+      }
+    }
+    console.log(`🆕 ${eventName} ${data.url()}`);
+    if (this.screenshots) {
+      await this.printScreenshot();
+    }
   };
 }
