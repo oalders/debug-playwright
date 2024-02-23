@@ -128,7 +128,7 @@ test.afterEach(afterEachHandler());
 ```typescript
 test.afterEach(async ({ page }, testInfo) => {
   if (testInfo.status === 'failed') {
-    await new DebugPlaywright({page: page}).printScreenshot();
+    await new DebugPlaywright({ page: page, listen: false }).printScreenshot();
   }
 });
 ```
