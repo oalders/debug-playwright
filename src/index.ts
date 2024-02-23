@@ -19,7 +19,7 @@ export function afterEachHandler() {
   return async ({ page }: { page: Page }, testInfo: any) => {
     if (testInfo.status === 'failed') {
       console.log('📷 screenshot on failure');
-      await new DebugPlaywright({ page }).printScreenshot();
+      await new DebugPlaywright({ page: page, listen: false }).printScreenshot();
     }
   };
 }
@@ -62,7 +62,6 @@ export class DebugPlaywright {
     formatContent = false,
   }: DebugOptions) {
     this.page = page;
-    this.addListener();
     this.command = command;
     this.formatContent = formatContent;
     this.fullPage = fullPage;
@@ -71,6 +70,10 @@ export class DebugPlaywright {
     this.methodPadLength = 4;
     this.requestCount = 0;
     this.screenshots = screenshots;
+
+    if (this.listen) {
+      this.addListener();
+    }
   }
 
   printFile = (file: string) => {
