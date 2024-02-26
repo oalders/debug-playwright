@@ -90,7 +90,7 @@ await dp.printScreenshot();
 
 ```typescript
 context.on('page', (p) => {
-  new DebugPlaywright(p);
+  new DebugPlaywright({ page: p});
 });
 ```
 
