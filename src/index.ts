@@ -185,7 +185,7 @@ export class DebugPlaywright {
       return;
     }
 
-    executeLynxCommand(await response.text());
+    lynx(await response.text());
   };
 
   handleRequestEvent = async (data: any, eventName: string) => {
@@ -215,7 +215,7 @@ export class DebugPlaywright {
   };
 }
 
-const executeLynxCommand = (text: string) => {
+const lynx = (text: string) => {
   const child = spawn('lynx', ['-stdin', '-dump']);
 
   child.stdin.write(text);
