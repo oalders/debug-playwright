@@ -19,7 +19,10 @@ export function afterEachHandler() {
   return async ({ page }: { page: Page }, testInfo: any) => {
     if (testInfo.status === 'failed') {
       console.log('📷 screenshot on failure');
-      await new DebugPlaywright({ page: page, listen: false }).printScreenshot();
+      await new DebugPlaywright({
+        page: page,
+        listen: false,
+      }).printScreenshot();
     }
   };
 }
