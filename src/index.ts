@@ -165,7 +165,7 @@ export class DebugPlaywright {
     });
   };
 
-  dumpformattedContent = async (response: Response) => {
+  private dumpformattedContent = async (response: Response) => {
     if (
       responseStatus(response) === '💩' ||
       responseStatus(response) === '🚀'
@@ -188,7 +188,7 @@ export class DebugPlaywright {
     lynx(await response.text());
   };
 
-  handleRequestEvent = async (data: any, eventName: string) => {
+  private handleRequestEvent = async (data: any, eventName: string) => {
     if (!this.listen) {
       return;
     }
