@@ -21,8 +21,4 @@ const lynx = (text: string) => {
   child.on('error', (error) => {
     console.error(`Error from child process: ${error}`);
   });
-
-  child.stdout.on('end', () => {
-    console.log('Child process ended');
-  });
 };
