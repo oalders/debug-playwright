@@ -9,8 +9,7 @@ test('2xx', async ({ page }) => {
     console.error('Cannot run wezterm imgcat inside tmux');
     test.skip();
   }
-  // const command = 'wezterm imgcat';
-  const command = 'imgcat';
+  const command = 'wezterm imgcat';
   const file = '/tmp/screenshot.png';
   await page.goto('https://example.com');
   await page.screenshot({ path: file });
