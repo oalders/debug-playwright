@@ -52,7 +52,6 @@ export function afterEachHandler() {
 
 interface DebugOptions {
   page: Page;
-  autoPlayVideo?: boolean;
   command?: string;
   formattedContent?: boolean;
   fullPage?: boolean;
@@ -63,7 +62,6 @@ interface DebugOptions {
 
 export class DebugPlaywright {
   public page: Page;
-  public autoPlayVideo: boolean;
   public command: string;
   public formattedContent: boolean;
   public fullPage: boolean;
@@ -76,14 +74,12 @@ export class DebugPlaywright {
   constructor({
     page,
     screenshots = true,
-    autoPlayVideo = false,
     fullPage = true,
     listen = true,
     command = DEFAULT_COMMAND,
     logAssetRequests = false,
     formattedContent: formattedContent = false,
   }: DebugOptions) {
-    this.autoPlayVideo = autoPlayVideo;
     this.page = page;
     this.command = command;
     this.formattedContent = formattedContent;
