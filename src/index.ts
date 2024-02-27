@@ -1,31 +1,12 @@
-import type { Page, Response } from '@playwright/test';
+import type { BrowserContext, Page, Response } from '@playwright/test';
 import { execSync, spawn } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { temporaryFile } from 'tempy';
+import path from 'path';
+import fs from 'fs';
 
 const DEFAULT_COMMAND = 'wezterm imgcat';
 const LOAD_STATE = 'domcontentloaded';
-
-const responseStatus = (response: Response) => {
-  const code = response.status();
-  return code < 300 ? '💖' : code < 400 ? '🚀' : '💩';
-};
-
-const contentType = async (response: Response) => {
-  return await response.headerValue('content-type');
-};
-
-export function afterEachHandler() {
-  return async ({ page }: { page: Page }, testInfo: any) => {
-    if (testInfo.status === 'failed') {
-      console.log('📷 screenshot on failure');
-      await new DebugPlaywright({
-        page: page,
-        listen: false,
-      }).printScreenshot();
-    }
-  };
-}
 
 export function beforeEachHandler() {
   return async ({ page }: { page: Page }, testInfo: any) => {
@@ -34,8 +15,44 @@ export function beforeEachHandler() {
   };
 }
 
+export function afterEachHandler() {
+  return async (
+    { page, context }: { page: Page; context: BrowserContext },
+    testInfo: any,
+  ) => {
+    if (testInfo.status === 'failed') {
+      console.log('📷 screenshot on failure');
+      await new DebugPlaywright({
+        page: page,
+        listen: false,
+      }).printScreenshot();
+    }
+
+    // ensure video file has been written to disk. otherwise it might just be a zero byte file
+    await context.close();
+
+    const video = await page.video()?.path();
+    if (!video) {
+      return;
+    }
+    if (!fs.existsSync(video)) {
+      console.error(`No movie exists at ${video}`);
+      return;
+    }
+
+    const gifPath = path.join(testInfo.outputPath(), `${path.basename(video)}.gif`);
+    movieToGIF('ffmpeg -i', video, gifPath);
+
+    new DebugPlaywright({
+      page: page,
+      listen: false,
+    }).printImage(gifPath);
+  };
+}
+
 interface DebugOptions {
   page: Page;
+  autoPlayVideo?: boolean;
   command?: string;
   formattedContent?: boolean;
   fullPage?: boolean;
@@ -46,6 +63,7 @@ interface DebugOptions {
 
 export class DebugPlaywright {
   public page: Page;
+  public autoPlayVideo: boolean;
   public command: string;
   public formattedContent: boolean;
   public fullPage: boolean;
@@ -58,12 +76,14 @@ export class DebugPlaywright {
   constructor({
     page,
     screenshots = true,
+    autoPlayVideo = false,
     fullPage = true,
     listen = true,
     command = DEFAULT_COMMAND,
     logAssetRequests = false,
     formattedContent: formattedContent = false,
   }: DebugOptions) {
+    this.autoPlayVideo = autoPlayVideo;
     this.page = page;
     this.command = command;
     this.formattedContent = formattedContent;
@@ -230,4 +250,26 @@ const lynx = (text: string) => {
   child.on('error', (error) => {
     console.error(`Error from child process: ${error}`);
   });
+};
+
+const movieToGIF = (command: string, video: string, gif: string): void => {
+  const cmd = `${command} ${video} ${gif}`;
+  try {
+    execSync(cmd, {});
+  } catch (e) {
+    if (e instanceof Error) {
+      console.log(`🤯 ${e.message}`);
+    } else {
+      console.log(`🤯 ${e}`);
+    }
+  }
+};
+
+const responseStatus = (response: Response) => {
+  const code = response.status();
+  return code < 300 ? '💖' : code < 400 ? '🚀' : '💩';
+};
+
+const contentType = async (response: Response) => {
+  return await response.headerValue('content-type');
 };
