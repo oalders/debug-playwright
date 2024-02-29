@@ -251,8 +251,8 @@ const lynx = (text: string) => {
 const movieToGIF = (command: string, video: string, gif: string): void => {
   const cmd = `${command} ${video} ${gif}`;
   try {
-    execSync(cmd, {});
-  } catch (e) {
+    execSync(cmd, { stdio: 'ignore' });
+  } catch (e: any) {
     if (e instanceof Error) {
       console.log(`🤯 ${e.message}`);
     } else {
