@@ -1,8 +1,10 @@
 import { test } from '@playwright/test';
 import { afterEachHandler } from '../src';
 
-test.afterEach(afterEachHandler());
-test.use({ video: 'on' });
+if (process.env.CI !== 'true') {
+  test.use({ video: 'on' });
+  test.afterEach(afterEachHandler());
+}
 
 test('record video', async ({ page }) => {
   if (process.env.CI === 'true') {
