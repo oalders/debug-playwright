@@ -120,7 +120,7 @@ export class DebugPlaywright {
   printImage = (file: string) => {
     try {
       const output = execSync(`${this.command} ${file}`, {
-        maxBuffer: 1048577,
+        maxBuffer: 20 * 1024 * 1024,
       });
       console.log(output.toString());
     } catch (e) {
