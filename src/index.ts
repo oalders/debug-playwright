@@ -41,7 +41,9 @@ export function afterEachHandler() {
     }
 
     const gifPath = path.join(testInfo.outputPath(), `${path.basename(video)}.gif`);
-    movieToGIF('ffmpeg -i', video, gifPath);
+    if (!movieToGIF('ffmpeg -i', video, gifPath)) {
+      return;
+    }
 
     new DebugPlaywright({
       page: page,
@@ -248,16 +250,18 @@ const lynx = (text: string) => {
   });
 };
 
-const movieToGIF = (command: string, video: string, gif: string): void => {
+const movieToGIF = (command: string, video: string, gif: string): boolean => {
   const cmd = `${command} ${video} ${gif}`;
   try {
     execSync(cmd, { stdio: 'ignore' });
+    return true;
   } catch (e: any) {
     if (e instanceof Error) {
       console.log(`🤯 ${e.message}`);
     } else {
       console.log(`🤯 ${e}`);
     }
+    return false;
   }
 };
 
