@@ -105,7 +105,7 @@ import { beforeEachHandler } from 'debug-playwright/dist/index.js';
 test.beforeEach(beforeEachHandler());
 ```
 
-#### Custom beforeEAch Handler
+#### Custom beforeEach Handler
 
 ```typescript
 test.beforeEach(async ({ page }, testInfo) => {
