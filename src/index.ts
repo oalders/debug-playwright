@@ -166,7 +166,7 @@ export class DebugPlaywright {
     p.on('close', (data) => {
       console.log(`✋ closed ${data.url()}`);
       // if data.url is a base64 encoded string, then it's a data url
-      // decode and console.log the first 1024 characters
+      // decode everything and console.log the first X characters
       if (data.url().startsWith('data:text/html;base64') && this.screenshots) {
         // This is not a screenshot, but it's in the spirit of the thing.
         const decoded = Buffer.from(
