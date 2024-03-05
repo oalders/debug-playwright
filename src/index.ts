@@ -1,4 +1,4 @@
-import type { BrowserContext, Page, Response } from '@playwright/test';
+import type { BrowserContext, Page, Response, TestInfo } from '@playwright/test';
 import { execSync, spawn } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { temporaryFile } from 'tempy';
@@ -31,24 +31,13 @@ export function afterEachHandler() {
     // ensure video file has been written to disk. otherwise it might just be a zero byte file
     await context.close();
 
-    const video = await page.video()?.path();
-    if (!video) {
-      return;
+    const gifPath = await maybeConvertMovie(page, testInfo);
+    if (gifPath) {
+      new DebugPlaywright({
+        page: page,
+        listen: false,
+      }).printImage(gifPath);
     }
-    if (!fs.existsSync(video)) {
-      console.error(`No movie exists at ${video}`);
-      return;
-    }
-
-    const gifPath = path.join(testInfo.outputPath(), `${path.basename(video)}.gif`);
-    if (!movieToGIF('ffmpeg -i', video, gifPath)) {
-      return;
-    }
-
-    new DebugPlaywright({
-      page: page,
-      listen: false,
-    }).printImage(gifPath);
   };
 }
 
@@ -250,7 +239,7 @@ const lynx = (text: string) => {
   });
 };
 
-const movieToGIF = (command: string, video: string, gif: string): boolean => {
+export const movieToGIF = (command: string, video: string, gif: string): boolean => {
   const cmd = `${command} ${video} ${gif}`;
   try {
     execSync(cmd, { stdio: 'ignore' });
@@ -263,6 +252,20 @@ const movieToGIF = (command: string, video: string, gif: string): boolean => {
     }
     return false;
   }
+};
+
+export const maybeConvertMovie = async (page: Page, testInfo: TestInfo): Promise<string | null> => {
+  const video = await page.video()?.path();
+  if (!video) {
+    return null;
+  }
+  if (!fs.existsSync(video)) {
+    console.error(`No movie exists at ${video}`);
+    return null;
+  }
+
+  const gifPath = path.join(testInfo.outputPath(), `${path.basename(video)}.gif`);
+  return movieToGIF('ffmpeg -i', video, gifPath) ? gifPath : null;
 };
 
 const responseStatus = (response: Response) => {
