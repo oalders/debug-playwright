@@ -1,3 +1,17 @@
+/**
+ * This module provides utilities for debugging Playwright tests.
+ * 
+ * It exports two handlers `beforeEachHandler` and `afterEachHandler` that can be used in Playwright tests.
+ * It also exports a `DebugPlaywright` class that provides methods for debugging Playwright pages.
+ * 
+ * Additionally, it exports two utility functions `maybeConvertMovie` and `movieToGIF` for handling video to GIF conversion.
+ * 
+ * `maybeConvertMovie` is an async function that takes a Playwright page and test info as parameters, and returns a promise that resolves to the path of the GIF or null if the conversion was not successful.
+ * 
+ * `movieToGIF` is a function that takes a command, video path, and GIF path as parameters, and returns a boolean indicating whether the conversion was successful.
+ * 
+ * @module DebugPlaywright
+ */
 import type { BrowserContext, Page, Response, TestInfo } from '@playwright/test';
 import { execSync, spawn } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
@@ -8,6 +22,12 @@ import fs from 'fs';
 const DEFAULT_COMMAND = 'wezterm imgcat';
 const LOAD_STATE = 'domcontentloaded';
 
+/**
+ * This function is intended to be used as a beforeEach handler in Playwright tests.
+ * It sets up a debugger on the page for each test.
+ * 
+ * @returns {Function} An async function to be run before each test.
+ */
 export function beforeEachHandler() {
   return async ({ page }: { page: Page }, testInfo: any) => {
     console.log(`🐝 setting debugger on page in "${testInfo.title}"`);
@@ -15,6 +35,13 @@ export function beforeEachHandler() {
   };
 }
 
+/**
+ * This function is intended to be used as an afterEach handler in Playwright tests.
+ * It takes a screenshot and prints it if the test fails.
+ * It also converts the video of the test to a gif and prints it.
+ * 
+ * @returns {Function} An async function to be run after each test.
+ */
 export function afterEachHandler() {
   return async (
     { page, context }: { page: Page; context: BrowserContext },
@@ -50,7 +77,17 @@ interface DebugOptions {
   logAssetRequests?: boolean;
   screenshots?: boolean;
 }
-
+/**
+ * This class provides methods for debugging Playwright pages.
+ * 
+ * @property {Page} page - The Playwright page to debug.
+ * @property {string} command - The command to print images. Defaults to the DP_IMG_CMD environment variable or 'wezterm imgcat'.
+ * @property {boolean} formattedContent - Whether to dump formatted content of responses. Defaults to false.
+ * @property {boolean} fullPage - Whether to take full page screenshots. Defaults to true.
+ * @property {boolean} listen - Whether to listen to page events. Defaults to true.
+ * @property {boolean} logAssetRequests - Whether to log asset requests. Defaults to false.
+ * @property {boolean} screenshots - Whether to take screenshots. Defaults to true.
+ */
 export class DebugPlaywright {
   public page: Page;
   public command: string;
@@ -239,6 +276,14 @@ const lynx = (text: string) => {
   });
 };
 
+/**
+ * This function converts a movie to a GIF using ffmpeg.
+ * 
+ * @param {string} command - The command to convert the movie to a GIF.
+ * @param {string} video - The path to the video file.
+ * @param {string} gif - The path to the output GIF file.
+ * @returns {boolean} Whether the conversion was successful.
+ */
 export const movieToGIF = (command: string, video: string, gif: string): boolean => {
   const cmd = `${command} ${video} ${gif}`;
   try {
@@ -253,7 +298,13 @@ export const movieToGIF = (command: string, video: string, gif: string): boolean
     return false;
   }
 };
-
+/**
+ * This function converts the video of a test to a GIF if it exists.
+ * 
+ * @param {Page} page - The Playwright page of the test.
+ * @param {TestInfo} testInfo - The test info object.
+ * @returns {Promise<string|null>} The path to the GIF file, or null if the conversion was not successful.
+ */
 export const maybeConvertMovie = async (page: Page, testInfo: TestInfo): Promise<string | null> => {
   const video = await page.video()?.path();
   if (!video) {

@@ -16,6 +16,10 @@ environment variable.
 
 `export DP_IMG_CMD=imgcat`
 
+## Documentation
+
+See the inline documentation `src/index.ts` for more comprehensive help.
+
 ## Run Tests
 
 ```bash
