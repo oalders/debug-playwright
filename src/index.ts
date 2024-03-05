@@ -141,6 +141,9 @@ export class DebugPlaywright {
       await p.screenshot({ path: tempFile, fullPage: this.fullPage });
     } catch (e) {
       if (e instanceof Error) {
+        if (e.stack?.includes('Target page, context or browser has been closed') && !this.verbose) {
+            return;
+        }
         console.log(`🤯 ${e.stack}`);
       } else {
         console.log(`🤯 ${e}`);
