@@ -76,6 +76,7 @@ interface DebugOptions {
   listen?: boolean;
   logAssetRequests?: boolean;
   screenshots?: boolean;
+  verbose?: boolean;
 }
 /**
  * This class provides methods for debugging Playwright pages.
@@ -87,6 +88,7 @@ interface DebugOptions {
  * @property {boolean} listen - Whether to listen to page events. Defaults to true.
  * @property {boolean} logAssetRequests - Whether to log asset requests. Defaults to false.
  * @property {boolean} screenshots - Whether to take screenshots. Defaults to true.
+ * @property {boolean} verbose - Whether to log verbose messages. Defaults to false.
  */
 export class DebugPlaywright {
   public page: Page;
@@ -97,6 +99,7 @@ export class DebugPlaywright {
   public logAssetRequests: boolean;
   public methodPadLength: number;
   public screenshots: boolean;
+  public verbose: boolean;
   private requestCount: number;
 
   constructor({
@@ -107,6 +110,7 @@ export class DebugPlaywright {
     command = process.env.DP_IMG_CMD || DEFAULT_COMMAND,
     logAssetRequests = false,
     formattedContent: formattedContent = false,
+    verbose = false,
   }: DebugOptions) {
     this.page = page;
     this.command = command;
@@ -117,6 +121,7 @@ export class DebugPlaywright {
     this.methodPadLength = 4;
     this.requestCount = 0;
     this.screenshots = screenshots;
+    this.verbose = verbose; // Set verbose property
 
     if (this.listen) {
       this.addListener();
@@ -125,7 +130,7 @@ export class DebugPlaywright {
 
   printScreenshot = async (page?: Page) => {
     const p = page ?? this.page;
-    if (p.isClosed()) {
+    if (p.isClosed() && this.verbose ) {
       console.log('Not taking screenshot. page is already closed.');
       return;
     }
