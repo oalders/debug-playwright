@@ -67,7 +67,7 @@ export class DebugPlaywright {
     screenshots = true,
     fullPage = true,
     listen = true,
-    command = DEFAULT_COMMAND,
+    command = process.env.DP_IMG_CMD || DEFAULT_COMMAND,
     logAssetRequests = false,
     formattedContent: formattedContent = false,
   }: DebugOptions) {

@@ -9,6 +9,13 @@ npx playwright install
 
 You may also need to install `wezterm` and `lynx`.
 
+## Configuration
+
+You can globally set the command used to print images via the `DP_IMG_CMD`
+environment variable.
+
+`export DP_IMG_CMD=imgcat`
+
 ## Run Tests
 
 ```bash
