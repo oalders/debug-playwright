@@ -12,7 +12,12 @@
  *
  * @module DebugPlaywright
  */
-import type { BrowserContext, Page, Response, TestInfo } from '@playwright/test';
+import type {
+  BrowserContext,
+  Page,
+  Response,
+  TestInfo,
+} from '@playwright/test';
 import { execSync, spawn } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { temporaryFile } from 'tempy';
