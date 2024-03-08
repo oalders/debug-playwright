@@ -139,7 +139,7 @@ export class DebugPlaywright {
 
   printScreenshot = async (page?: Page) => {
     const p = page ?? this.page;
-    if (p.isClosed() && this.verbose ) {
+    if (p.isClosed() && this.verbose) {
       console.log('Not taking screenshot. page is already closed.');
       return;
     }
@@ -150,8 +150,13 @@ export class DebugPlaywright {
       await p.screenshot({ path: tempFile, fullPage: this.fullPage });
     } catch (e) {
       if (e instanceof Error) {
-        if (e.stack?.includes('Target page, context or browser has been closed') && !this.verbose) {
-            return;
+        if (
+          e.stack?.includes(
+            'Target page, context or browser has been closed',
+          ) &&
+          !this.verbose
+        ) {
+          return;
         }
         console.log(`🤯 ${e.stack}`);
       } else {
@@ -312,7 +317,11 @@ const lynx = (text: string) => {
  * @param {string} gif - The path to the output GIF file.
  * @returns {boolean} Whether the conversion was successful.
  */
-export const movieToGIF = (command: string, video: string, gif: string): boolean => {
+export const movieToGIF = (
+  command: string,
+  video: string,
+  gif: string,
+): boolean => {
   const cmd = `${command} ${video} ${gif}`;
   try {
     execSync(cmd, { stdio: 'ignore' });
@@ -333,7 +342,10 @@ export const movieToGIF = (command: string, video: string, gif: string): boolean
  * @param {TestInfo} testInfo - The test info object.
  * @returns {Promise<string|null>} The path to the GIF file, or null if the conversion was not successful.
  */
-export const maybeConvertMovie = async (page: Page, testInfo: TestInfo): Promise<string | null> => {
+export const maybeConvertMovie = async (
+  page: Page,
+  testInfo: TestInfo,
+): Promise<string | null> => {
   const video = await page.video()?.path();
   if (!video) {
     return null;
@@ -343,7 +355,10 @@ export const maybeConvertMovie = async (page: Page, testInfo: TestInfo): Promise
     return null;
   }
 
-  const gifPath = path.join(testInfo.outputPath(), `${path.basename(video)}.gif`);
+  const gifPath = path.join(
+    testInfo.outputPath(),
+    `${path.basename(video)}.gif`,
+  );
   return movieToGIF('ffmpeg -i', video, gifPath) ? gifPath : null;
 };
 
