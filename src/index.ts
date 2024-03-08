@@ -269,7 +269,18 @@ export class DebugPlaywright {
         return;
       }
     }
-    console.log(`🆕 ${eventName} ${data.url()}`);
+    console.log(
+      `🆕 ${eventName.padEnd(15, ' ')} ${data.method().padEnd(4, ' ')} ${data.url()}`,
+    );
+    if (
+      eventName === 'requestfinished' &&
+      data.method().toLowerCase() === 'post' &&
+      this.logPOSTParams
+    ) {
+      const params = new URLSearchParams(data.postData());
+      const paramsMap = new Map(params.entries());
+      console.dir(paramsMap);
+    }
     if (this.screenshots) {
       await this.printScreenshot();
     }
