@@ -219,7 +219,7 @@ export class DebugPlaywright {
       console.log(
         [
           responseStatus(response),
-          response.status(),
+          response.status().toString().padEnd(15, ' '),
           response.request().method().padEnd(this.methodPadLength, ' '),
           response.url(),
           await contentType(response),
@@ -260,7 +260,7 @@ export class DebugPlaywright {
     }
     if (data.method() !== 'get' && data.resourceType() !== 'document') {
       if (this.logAssetRequests) {
-        console.log(`🆕 ${eventName} ${data.url()}`);
+        console.log(`🆕 ${eventName} ${data.method()} ${data.url()}`);
       }
       return;
     }
