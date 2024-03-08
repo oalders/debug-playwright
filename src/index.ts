@@ -92,6 +92,7 @@ interface DebugOptions {
  * @property {boolean} fullPage - Whether to take full page screenshots. Defaults to true.
  * @property {boolean} listen - Whether to listen to page events. Defaults to true.
  * @property {boolean} logAssetRequests - Whether to log asset requests. Defaults to false.
+ * @property {boolean} logPOSTParams - Whether to log POST request parameters. Defaults to true.
  * @property {boolean} screenshots - Whether to take screenshots. Defaults to true.
  * @property {boolean} verbose - Whether to log verbose messages. Defaults to false.
  */
@@ -102,6 +103,7 @@ export class DebugPlaywright {
   public fullPage: boolean;
   public listen: boolean;
   public logAssetRequests: boolean;
+  public logPOSTParams: boolean;
   public methodPadLength: number;
   public screenshots: boolean;
   public verbose: boolean;
@@ -114,6 +116,7 @@ export class DebugPlaywright {
     listen = true,
     command = process.env.DP_IMG_CMD || DEFAULT_COMMAND,
     logAssetRequests = false,
+    logPOSTParams = true,
     formattedContent: formattedContent = false,
     verbose = false,
   }: DebugOptions) {
@@ -123,6 +126,7 @@ export class DebugPlaywright {
     this.fullPage = fullPage;
     this.listen = listen;
     this.logAssetRequests = logAssetRequests;
+    this.logPOSTParams = logPOSTParams;
     this.methodPadLength = 4;
     this.requestCount = 0;
     this.screenshots = screenshots;
