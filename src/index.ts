@@ -80,6 +80,7 @@ interface DebugOptions {
   fullPage?: boolean;
   listen?: boolean;
   logAssetRequests?: boolean;
+  logPOSTParams?: boolean;
   screenshots?: boolean;
   verbose?: boolean;
 }
