@@ -169,6 +169,18 @@ export class DebugPlaywright {
   };
 
   printImage = (file: string) => {
+    // maybe fall back to viu if we are in an env where imgcat probably won't work
+    if (this.command.includes('imgcat') && process.env.TMUX) {
+      const viuPath = execSync('which viu', { stdio: 'pipe' })
+        .toString()
+        .trim();
+      if (viuPath) {
+        this.command = 'viu';
+        console.log(
+          `🤔 falling back to viu, since we appear to be inside tmux`,
+        );
+      }
+    }
     try {
       const output = execSync(`${this.command} ${file}`, {
         maxBuffer: 20 * 1024 * 1024,
