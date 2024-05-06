@@ -313,7 +313,13 @@ export class DebugPlaywright {
   };
 }
 
-const lynx = (text: string) => {
+/**
+ * Uses the Lynx text-based web browser to format and print HTML content to the console.
+ *
+ * @param {string} text - The HTML content to format and print.
+ *
+ */
+export const lynx = (text: string) => {
   const child = spawn('lynx', ['-stdin', '-dump']);
 
   child.stdin.write(text);
