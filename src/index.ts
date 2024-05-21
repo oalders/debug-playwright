@@ -373,8 +373,15 @@ export const maybeConvertMovie = async (
   page: Page,
   testInfo: TestInfo,
 ): Promise<string | null> => {
-  const video = await page.video()?.path();
+  const v = page.video();
+  if (!v) {
+    console.log('🎬 No video');
+    return null;
+  }
+
+  const video = await v.path();
   if (!video) {
+    console.log('🎬 No path to video');
     return null;
   }
   if (!fs.existsSync(video)) {
