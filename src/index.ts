@@ -90,7 +90,7 @@ interface DebugOptions {
  * @property {Page} page - The Playwright page to debug.
  * @property {string} command - The command to print images. Defaults to the DP_IMG_CMD environment variable or 'wezterm imgcat'.
  * @property {boolean} formattedContent - Whether to dump formatted content of responses. Defaults to false.
- * @property {boolean} fullPage - Whether to take full page screenshots. Defaults to true.
+ * @property {boolean} fullPage - Whether to take full page screenshots. Defaults to true. Disable for more consistent movie output.
  * @property {boolean} listen - Whether to listen to page events. Defaults to true.
  * @property {boolean} logAssetRequests - Whether to log asset requests. Defaults to false.
  * @property {boolean} logPOSTParams - Whether to log POST request parameters. Defaults to true.
@@ -337,7 +337,8 @@ export const lynx = (text: string) => {
 };
 
 /**
- * This function converts a movie to a GIF using ffmpeg.
+ * This function converts a movie to a GIF using ffmpeg. Set fullpage: false if
+ * your movie does not have a consistent screen size.
  *
  * @param {string} command - The command to convert the movie to a GIF.
  * @param {string} video - The path to the video file.
