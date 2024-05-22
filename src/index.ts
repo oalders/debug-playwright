@@ -175,10 +175,14 @@ export class DebugPlaywright {
         const commands = ['chafa', 'viu'];
         for (const command of commands) {
           try {
-            const path = execSync(`which ${command}`, { stdio: 'pipe' }).toString().trim();
+            const path = execSync(`which ${command}`, { stdio: 'pipe' })
+              .toString()
+              .trim();
             if (path) {
               this.command = command;
-              console.log(`🤔 falling back to ${command}, since we appear to be inside tmux`);
+              console.log(
+                `🤔 falling back to ${command}, since we appear to be inside tmux`,
+              );
               break;
             }
           } catch (e) {
