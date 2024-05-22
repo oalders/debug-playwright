@@ -340,17 +340,17 @@ export const lynx = (text: string) => {
  * This function converts a movie to a GIF using ffmpeg. Set fullpage: false if
  * your movie does not have a consistent screen size.
  *
- * @param {string} command - The command to convert the movie to a GIF.
+ * @param {string} template - The template for a command to convert the movie to a GIF. e.g. 'ffmpeg -i {video} {gif}'
  * @param {string} video - The path to the video file.
  * @param {string} gif - The path to the output GIF file.
  * @returns {boolean} Whether the conversion was successful.
  */
 export const movieToGIF = (
-  command: string,
+  template: string,
   video: string,
   gif: string,
 ): boolean => {
-  const cmd = `${command} ${video} ${gif}`;
+  const cmd = template.replace('{video}', video).replace('{gif}', gif);
   try {
     execSync(cmd, { stdio: 'ignore' });
     return true;
@@ -394,7 +394,9 @@ export const maybeConvertMovie = async (
     testInfo.outputPath(),
     `${path.basename(video)}.gif`,
   );
-  return movieToGIF('ffmpeg -i', video, gifPath) ? gifPath : null;
+
+  const template = 'ffmpeg -i {video} {gif}';
+  return movieToGIF(template, video, gifPath) ? gifPath : null;
 };
 
 const responseStatus = (response: Response) => {
