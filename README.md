@@ -122,8 +122,7 @@ test.beforeEach(beforeEachHandler());
 test.beforeEach(async ({ page }, testInfo) => {
   new DebugPlaywright({page: page});
 });
-
-### Print Screenshot on Test Failure
+```
 
 #### Default afterEach Handler
 
@@ -136,10 +135,28 @@ test.afterEach(afterEachHandler());
 
 #### Custom afterEach Handler
 
+##### Print Screenshot on Failure
+
 ```typescript
 test.afterEach(async ({ page }, testInfo) => {
   if (testInfo.status === 'failed') {
     await new DebugPlaywright({ page: page, listen: false }).printScreenshot();
+  }
+});
+```
+
+##### Print Animated GIF of Screen Recording, if a Recording Exists
+
+```typescript
+test.afterEach(async ({ context, page }, testInfo) => {
+  const dp = new DebugPlaywright({ page: page, listen: false });
+  // ensure video file has been written to disk. otherwise it might just be a
+  // zero byte file
+  await context.close();
+
+  const gifPath = await maybeConvertMovie(page, testInfo);
+  if (gifPath) {
+    dp.printImage(gifPath);
   }
 });
 ```
