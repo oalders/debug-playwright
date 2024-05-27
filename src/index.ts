@@ -399,7 +399,7 @@ export const maybeConvertMovie = async (
     `${path.basename(video)}.gif`,
   );
 
-  const template = 'ffmpeg -i {video} {gif}';
+  const template = 'ffmpeg -i {video} -vf "setpts=4.0*PTS,scale=1200:-1" {gif}';
   return movieToGIF(template, video, gifPath) ? gifPath : null;
 };
 
