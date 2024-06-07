@@ -33,7 +33,7 @@ const LOAD_STATE = 'domcontentloaded';
  *
  * @returns {Function} An async function to be run before each test.
  */
-export function beforeEachHandler() {
+export function beforeEachHandler(): Function {
   return async ({ page }: { page: Page }, testInfo: any) => {
     console.log(`🐝 setting debugger on page in "${testInfo.title}"`);
     new DebugPlaywright({ page: page });
@@ -47,7 +47,7 @@ export function beforeEachHandler() {
  *
  * @returns {Function} An async function to be run after each test.
  */
-export function afterEachHandler() {
+export function afterEachHandler(): Function {
   return async (
     { page, context }: { page: Page; context: BrowserContext },
     testInfo: any,
