@@ -178,3 +178,16 @@ await page.setViewportSize({
   height: 2000,
 });
 ```
+
+### lynx
+
+To get a screen dump of every page as lynx sees it:
+
+```typescript
+const dp = new DebugPlaywright({
+    page: page,
+    listen: true,
+    screenshots: false,
+    formattedContent: true,
+});
+```
