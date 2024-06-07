@@ -118,8 +118,13 @@ test.beforeEach(beforeEachHandler());
 
 #### Custom beforeEach Handler
 
+Pleas note:
+
+* `testinfo` is also available if you need it
+* mark the function as `async` if there's anything you need to `await`
+
 ```typescript
-test.beforeEach(async ({ page }, testInfo) => {
+test.beforeEach(({ page }) => {
   new DebugPlaywright({page: page});
 });
 ```
