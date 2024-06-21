@@ -108,6 +108,7 @@ export class DebugPlaywright {
   public methodPadLength: number;
   public screenshots: boolean;
   public verbose: boolean;
+  private logger: string[][];
   private requestCount: number;
 
   constructor({
@@ -132,6 +133,7 @@ export class DebugPlaywright {
     this.requestCount = 0;
     this.screenshots = screenshots;
     this.verbose = verbose; // Set verbose property
+    this.logger = [];
 
     if (this.listen) {
       this.addListener();
@@ -207,6 +209,14 @@ export class DebugPlaywright {
     }
   };
 
+  printLogs = () => {
+    const today = new Date().toISOString().slice(0, 10);
+    console.log(`Coverage [${today}]:`);
+    this.logger.forEach((line) => {
+      console.log(line.join(' '));
+    });
+  };
+
   addListener = (page?: Page) => {
     console.log('➕ adding listener');
     const p = page ? page : this.page;
@@ -222,6 +232,7 @@ export class DebugPlaywright {
         ).toString();
         console.log(decoded.slice(0, 1024 * 5));
       }
+      this.printLogs();
     });
     p.on('request', async (data) => {
       this.handleRequestEvent(data, 'request');
@@ -253,6 +264,14 @@ export class DebugPlaywright {
       if (this.formattedContent) {
         await this.dumpformattedContent(response);
       }
+
+      const url = new URL(response.url());
+      const pathWithParameters = url.pathname + url.search;
+      this.logger.push([
+        response.status().toString(),
+        response.request().method().padEnd(this.methodPadLength, ' '),
+        pathWithParameters,
+      ]);
     });
   };
 
