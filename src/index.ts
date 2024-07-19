@@ -248,10 +248,18 @@ export class DebugPlaywright {
         // console.log(`ignoring ${response.request().resourceType()}`);
         return;
       }
+
+      const url = new URL(response.url());
+      const pathWithParameters = url.pathname + url.search;
+      this.logger.push([
+        response.status().toString(),
+        response.request().method().padEnd(this.methodPadLength, ' '),
+        pathWithParameters,
+      ]);
+
       if (responseStatus(response) === '🚀') {
         return;
       }
-
       console.log(
         [
           responseStatus(response),
@@ -264,14 +272,6 @@ export class DebugPlaywright {
       if (this.formattedContent) {
         await this.dumpformattedContent(response);
       }
-
-      const url = new URL(response.url());
-      const pathWithParameters = url.pathname + url.search;
-      this.logger.push([
-        response.status().toString(),
-        response.request().method().padEnd(this.methodPadLength, ' '),
-        pathWithParameters,
-      ]);
     });
   };
 
