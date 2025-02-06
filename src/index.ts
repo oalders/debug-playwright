@@ -304,7 +304,7 @@ export class DebugPlaywright {
     }
     if (data.method() !== 'get' && data.resourceType() !== 'document') {
       if (this.logAssetRequests) {
-        console.log(`🆕 ${eventName} ${data.method()} ${data.url()}`);
+        console.log(`✨ ${eventName} ${data.method()} ${data.url()}`);
       }
       return;
     }
@@ -319,7 +319,7 @@ export class DebugPlaywright {
       }
     }
     console.log(
-      `🆕 ${eventName.padEnd(15, ' ')} ${data.method().padEnd(4, ' ')} ${data.url()}`,
+      `✨ ${eventName.padEnd(15, ' ')} ${data.method().padEnd(4, ' ')} ${data.url()}`,
     );
     if (
       eventName === 'requestfinished' &&
@@ -328,6 +328,7 @@ export class DebugPlaywright {
     ) {
       const params = new URLSearchParams(data.postData());
       const paramsMap = new Map(params.entries());
+      console.log('📤 POST parameters:');
       console.dir(paramsMap);
     }
     if (this.screenshots) {
