@@ -191,3 +191,33 @@ const dp = new DebugPlaywright({
     formattedContent: true,
 });
 ```
+
+## Utility Functions
+
+### maybeConvertMovie
+
+This function converts the video of a test to a GIF if it exists.
+
+```typescript
+import { maybeConvertMovie } from 'debug-playwright';
+
+const gifPath = await maybeConvertMovie(page, testInfo);
+if (gifPath) {
+  console.log(`GIF created at: ${gifPath}`);
+}
+```
+
+### movieToGIF
+
+This function converts a movie to a GIF using ffmpeg. Set `fullPage: false` if your movie does not have a consistent screen size.
+
+```typescript
+import { movieToGIF } from 'debug-playwright';
+
+const template = 'ffmpeg -i {video} -vf "setpts=4.0*PTS,scale=1200:-1" {gif}';
+const success = movieToGIF(template, 'path/to/video.mp4', 'path/to/output.gif');
+if (success) {
+  console.log('GIF conversion successful');
+} else {
+  console.log('GIF conversion failed');
+}
