@@ -67,7 +67,7 @@ To open last HTML report run:
 ## Usage
 
 ```typescript
-import { DebugPlaywright } from 'debug-playwright/dist/index.js';
+import { DebugPlaywright } from 'debug-playwright';
 ```
 
 ### Default
@@ -111,7 +111,7 @@ context.on('page', (p) => {
 
 ```typescript
 import { test } from '@playwright/test';
-import { beforeEachHandler } from 'debug-playwright/dist/index.js';
+import { beforeEachHandler } from 'debug-playwright';
 
 test.beforeEach(beforeEachHandler());
 ```
@@ -133,7 +133,7 @@ test.beforeEach(({ page }) => {
 
 ```typescript
 import { test } from '@playwright/test';
-import { afterEachHandler } from 'debug-playwright/dist/index.js';
+import { afterEachHandler } from 'debug-playwright';
 
 test.afterEach(afterEachHandler());
 ```
