@@ -3,8 +3,7 @@
 ## Installation
 
 ```bash
-npm install
-npx playwright install
+npm i debug-playwright
 ```
 
 You may also need to install `wezterm` and `lynx`.
