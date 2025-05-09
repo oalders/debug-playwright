@@ -6,12 +6,21 @@
 npm i debug-playwright
 ```
 
-You may also need to install `wezterm` and `lynx`.
+## Quick Start
+
+```typescript
+import { DebugPlaywright } from 'debug-playwright';
+
+test.beforeEach(({ page }) => {
+  new DebugPlaywright({ page: page });
+});
+```
 
 ## Configuration
 
-You can globally set the command used to print images via the `DP_IMG_CMD`
-environment variable.
+This library defaults to using `wezterm imgcat` for printing images to the
+console. However, ou can globally set the command used to print images via the
+`DP_IMG_CMD` environment variable.
 
 `export DP_IMG_CMD=imgcat`
 
@@ -34,6 +43,9 @@ npx playwright test --headed
 ## Expected Output
 
 ### HTML formatted as text
+
+You'll need to have `lynx` installed if you'd like to view HTML formatted as
+text.
 
 ```text
 npx playwright test -g lynx
