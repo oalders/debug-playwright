@@ -140,7 +140,13 @@ export class DebugPlaywright {
     }
   }
 
-  printScreenshot = async (page?: Page) => {
+  /**
+   * Takes a screenshot of the current page or a specified page and displays it using the configured image viewer.
+   *
+   * @param {Page} [page] - Optional Playwright page. If not provided, uses this.page
+   * @returns {Promise<void>} A promise that resolves when the screenshot has been taken and displayed
+   */
+  async printScreenshot(page?: Page): Promise<void> {
     const p = page ?? this.page;
     if (p.isClosed() && this.verbose) {
       console.log('Not taking screenshot. page is already closed.');
