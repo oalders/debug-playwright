@@ -12,7 +12,7 @@ npm i debug-playwright
 import { DebugPlaywright } from 'debug-playwright';
 
 test.beforeEach(({ page }) => {
-  new DebugPlaywright({ page: page });
+  new DebugPlaywright({ page });
 });
 ```
 
@@ -87,13 +87,13 @@ Run debugging with the defaults. Requires you to be running inside `wezterm`
 but **not** inside `tmux`.
 
 ```typescript
-const dp = new DebugPlaywright({ page: page });
+const dp = new DebugPlaywright({ page });
 ```
 
 ### Configure
 
 ```typescript
-const dp = new DebugPlaywright({ page: page });
+const dp = new DebugPlaywright({ page });
 
 // take full page screenshots
 dp.fullPage = true;
@@ -136,7 +136,7 @@ Pleas note:
 
 ```typescript
 test.beforeEach(({ page }) => {
-  new DebugPlaywright({page: page});
+  new DebugPlaywright({page});
 });
 ```
 
@@ -156,7 +156,7 @@ test.afterEach(afterEachHandler());
 ```typescript
 test.afterEach(async ({ page }, testInfo) => {
   if (testInfo.status === 'failed') {
-    await new DebugPlaywright({ page: page, listen: false }).printScreenshot();
+    await new DebugPlaywright({ page, listen: false }).printScreenshot();
   }
 });
 ```
@@ -165,7 +165,7 @@ test.afterEach(async ({ page }, testInfo) => {
 
 ```typescript
 test.afterEach(async ({ context, page }, testInfo) => {
-  const dp = new DebugPlaywright({ page: page, listen: false });
+  const dp = new DebugPlaywright({ page, listen: false });
   // ensure video file has been written to disk. otherwise it might just be a
   // zero byte file
   await context.close();
@@ -220,7 +220,8 @@ if (gifPath) {
 
 ### movieToGIF
 
-This function converts a movie to a GIF using ffmpeg. Set `fullPage: false` if your movie does not have a consistent screen size.
+This function converts a movie to a GIF using ffmpeg. Set `fullPage: false` if
+your movie does not have a consistent screen size.
 
 ```typescript
 import { movieToGIF } from 'debug-playwright';
