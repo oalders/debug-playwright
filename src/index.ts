@@ -176,7 +176,7 @@ export class DebugPlaywright {
     this.printImage(tempFile);
   };
 
-  printImage = (file: string) => {
+  async printImage (file: string): Promise<void> {
     // maybe fall back to viu if we are in an env where imgcat probably won't work
     if (this.command.includes('imgcat') && process.env.TMUX) {
       try {
@@ -215,7 +215,7 @@ export class DebugPlaywright {
     }
   };
 
-  printLogs = () => {
+  async printLogs (): Promise<void> {
     const today = new Date().toISOString().slice(0, 10);
     console.log(`Coverage [${today}]:`);
     this.logger.forEach((line) => {
@@ -223,7 +223,7 @@ export class DebugPlaywright {
     });
   };
 
-  addListener = (page?: Page) => {
+  addListener(page?: Page) {
     console.log('➕ adding listener');
     const p = page ? page : this.page;
     p.on('close', (data) => {
@@ -281,7 +281,7 @@ export class DebugPlaywright {
     });
   };
 
-  private dumpformattedContent = async (response: Response) => {
+  private async dumpformattedContent(response: Response) {
     if (
       responseStatus(response) === '💩' ||
       responseStatus(response) === '🚀'
@@ -304,7 +304,7 @@ export class DebugPlaywright {
     lynx(await response.text());
   };
 
-  private handleRequestEvent = async (data: any, eventName: string) => {
+  private async handleRequestEvent(data: any, eventName: string) {
     if (!this.listen) {
       return;
     }
