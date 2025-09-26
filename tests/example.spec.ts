@@ -20,13 +20,13 @@ test('2xx screenshot on error', async ({ page }) => {
   if (process.env.CI === 'true') {
     dp.command = 'image';
   }
-  await page.goto('https://example.com');
+  await page.goto('https://www.olafalders.com');
   await new Promise((resolve) => setTimeout(resolve, 400));
 
   await expect(page).toHaveTitle(/🐮/, { timeout: 10 });
 });
 
-test('2xx', async ({ page }) => {
+test('2xx example.com', async ({ page }) => {
   const dp = new DebugPlaywright({ page: page });
   if (process.env.CI === 'true') {
     dp.command = 'image';
@@ -47,9 +47,9 @@ test('2xx lynx', async ({ page }) => {
   await expect(page).toHaveTitle(/Example Domain/);
 });
 
-test('2xx image', async ({ page }) => {
+test('2xx ascii image', async ({ page }) => {
   const dp = new DebugPlaywright({ page: page });
-  dp.command = 'image';
+  dp.command = 'image2ascii';
   await page.goto('https://example.com');
   await new Promise((resolve) => setTimeout(resolve, 200));
   expect(page.getByRole('link', { name: /More information/ })).toBeTruthy();
@@ -79,10 +79,10 @@ test('2xx png', async ({ page }) => {
   await expect(page).not.toHaveTitle('title');
 });
 
-test('2xx png image', async ({ page }) => {
+test('2xx image2ascii png', async ({ page }) => {
   const dp = new DebugPlaywright({ page: page, screenshots: false });
   dp.formattedContent = true;
-  dp.command = 'image';
+  dp.command = 'image2ascii';
   await page.goto('https://vilerichard.com/static/photos/group1.jpg');
   await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -90,15 +90,15 @@ test('2xx png image', async ({ page }) => {
 });
 
 test('4xx', async ({ page }) => {
-  const dp = new DebugPlaywright({ page: page });
+  const dp = new DebugPlaywright({ page: page, formattedContent: false });
   dp.formattedContent = true;
   if (process.env.CI === 'true') {
     dp.command = 'image';
   }
-  await page.goto('https://example.com/404');
+  await page.goto('https://mymindisracing.com/404');
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  await expect(page).toHaveTitle(/Example Domain/);
+  await expect(page).toHaveTitle('');
 });
 
 test('2xx screenshot default', async ({ page }) => {
