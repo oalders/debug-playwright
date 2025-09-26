@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.5] - 2025-09-25
+
+- Add extra flags when image2ascii is used
+
 ## [0.1.4] - 2025-04-30
 
 ### Changed
