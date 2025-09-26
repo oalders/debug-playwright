@@ -202,7 +202,10 @@ export class DebugPlaywright {
       }
     }
     try {
-      const output = execSync(`${this.command} ${file}`, {
+      const commandWithFile = this.command.includes('image2ascii')
+        ? `${this.command} -f ${file} -w 80 -g 24`
+        : `${this.command} ${file}`;
+      const output = execSync(commandWithFile, {
         maxBuffer: 20 * 1024 * 1024,
       });
       console.log(output.toString());
