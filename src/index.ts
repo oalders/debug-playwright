@@ -174,9 +174,9 @@ export class DebugPlaywright {
       return;
     }
     this.printImage(tempFile);
-  };
+  }
 
-  async printImage (file: string): Promise<void> {
+  async printImage(file: string): Promise<void> {
     // maybe fall back to viu if we are in an env where imgcat probably won't work
     if (this.command.includes('imgcat') && process.env.TMUX) {
       try {
@@ -202,7 +202,10 @@ export class DebugPlaywright {
       }
     }
     try {
-      const output = execSync(`${this.command} ${file}`, {
+      const commandWithFile = this.command.includes('image2ascii')
+        ? `${this.command} -f ${file} -w 80 -g 24`
+        : `${this.command} ${file}`;
+      const output = execSync(commandWithFile, {
         maxBuffer: 20 * 1024 * 1024,
       });
       console.log(output.toString());
@@ -213,15 +216,15 @@ export class DebugPlaywright {
         console.log(`🤯 ${e}`);
       }
     }
-  };
+  }
 
-  async printLogs (): Promise<void> {
+  async printLogs(): Promise<void> {
     const today = new Date().toISOString().slice(0, 10);
     console.log(`Coverage [${today}]:`);
     this.logger.forEach((line) => {
       console.log(line.join(' '));
     });
-  };
+  }
 
   addListener(page?: Page) {
     console.log('➕ adding listener');
@@ -279,7 +282,7 @@ export class DebugPlaywright {
         await this.dumpformattedContent(response);
       }
     });
-  };
+  }
 
   private async dumpformattedContent(response: Response) {
     if (
@@ -302,7 +305,7 @@ export class DebugPlaywright {
     }
 
     lynx(await response.text());
-  };
+  }
 
   private async handleRequestEvent(data: any, eventName: string) {
     if (!this.listen) {
@@ -340,7 +343,7 @@ export class DebugPlaywright {
     if (this.screenshots) {
       await this.printScreenshot();
     }
-  };
+  }
 }
 
 /**
