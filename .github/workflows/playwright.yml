@@ -19,7 +19,7 @@ jobs:
           node-version: 22
       - name: Install lynx
         run: sudo apt-get install lynx
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: '>=1.21.0'
       - run: go version
