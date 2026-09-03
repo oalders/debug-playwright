@@ -95,10 +95,13 @@ test('4xx', async ({ page }) => {
   if (process.env.CI === 'true') {
     dp.command = 'image';
   }
-  await page.goto('https://mymindisracing.com/404');
+  // mymindisracing.com/404 is now behind Cloudflare, which serves a "Just a
+  // moment..." interstitial instead of a bare 404. Use a 404 on olafalders.com,
+  // whose 404 page renders its own title.
+  await page.goto('https://www.olafalders.com/404');
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  await expect(page).toHaveTitle('');
+  await expect(page).toHaveTitle(/404 Page Not Found/);
 });
 
 test('2xx screenshot default', async ({ page }) => {
